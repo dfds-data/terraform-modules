@@ -1,12 +1,7 @@
 locals {
-  lambda_function_name         = format("pump-%s-%s", var.environmentname, var.entity_name)
-  lambda_role                  = format("pump-%s-%s", var.environmentname, var.entity_name)
-  event_rule_name              = format("pump-%s-%s", var.environmentname, var.entity_name)
-  athena_query_location_bucket = format("%s-athena-query-location", var.environmentname)
-  lambda_output_bucket         = format("%s-output", var.environmentname)
-  glue_database_name           = format("%s-db", var.environmentname)
-  glue_table_name              = format("%s", var.entity_name)
-  lambda_builds_bucket         = format("%s-builds", var.environmentname)
+  lambda_function_name = format("pump-%s-%s", var.environmentname, var.entity_name)
+  lambda_role          = format("pump-%s-%s", var.environmentname, var.entity_name)
+  event_rule_name      = format("pump-%s-%s", var.environmentname, var.entity_name)
 }
 
 
@@ -14,7 +9,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   s3_bucket           = data.aws_s3_bucket_object.lambda_layer_payload.bucket
   s3_key              = data.aws_s3_bucket_object.lambda_layer_payload.key
   layer_name          = format("%s-layer", var.entity_name)
-  compatible_runtimes = ["python3.8"]
+  compatible_runtimes = [var.runtime]
   source_code_hash    = data.aws_s3_bucket_object.lambda_layer_payload_hash.body
 }
 
@@ -24,7 +19,7 @@ resource "aws_lambda_function" "lambda_function" {
   function_name    = local.lambda_function_name
   role             = aws_iam_role.instance.arn
   handler          = var.lambda_handler
-  runtime          = "python3.8"
+  runtime          = var.runtime
   source_code_hash = data.aws_s3_bucket_object.lambda_function_payload_hash.body
   layers = [
     aws_lambda_layer_version.lambda_layer.arn,
@@ -35,9 +30,9 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       ddp_endpoint         = var.ddp_endpoint
       secrets_name         = var.secrets_name
-      glue_database_name   = local.glue_database_name
-      glue_table_name      = local.glue_table_name
-      lambda_output_bucket = local.lambda_output_bucket
+      glue_database_name   = var.glue_database_name
+      glue_table_name      = var.entity_name
+      output_bucket        = var.output_bucket
       lambda_output_folder = var.entity_name
       environmentname      = var.environmentname
     }

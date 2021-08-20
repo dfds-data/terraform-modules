@@ -20,11 +20,22 @@ variable "ddp_endpoint" {
 }
 
 
-variable "lambda_builds_bucket" {
+variable "builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
 }
 
+variable "output_bucket" {
+  description = "Name s3 bucket for the lambda builds"
+  type        = string
+}
+
+
+variable "runtime" {
+  description = "Python runtime"
+  type        = string
+  default = "python3.8"
+}
 
 variable "lambda_function_payload" {
   description = "Zip file containing the lambda function"
