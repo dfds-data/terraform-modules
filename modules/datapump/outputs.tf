@@ -27,9 +27,3 @@ output "log_group_name" {
   description = "Name of the AWS Cloudwatch log group"
   value       = aws_cloudwatch_log_group.log_lambda.name
 }
-
-
-output "lambda_builds_bucket" {
-  description = "Name s3 bucket for the lambda builds"
-  value       = local.lambda_builds_bucket
-}
