@@ -37,7 +37,7 @@ resource "aws_glue_catalog_database" "glue_database" {
 # Zip the Lamda function on the fly
 data "archive_file" "source" {
   type        = "zip"
-  source = "git::https://github.com/dfds-data/terraform-modules/modules/base_infrastructure/lambda_function_payload.py"
+  source_file = "git::https://github.com/dfds-data/terraform-modules/modules/base_infrastructure/lambda_function_payload.py"
   output_path = "lambda_functions/metrics_lambda_function_payload.zip"
 }
 # upload zip to s3 and then update lamda function from s3
