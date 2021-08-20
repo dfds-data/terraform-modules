@@ -1,14 +1,14 @@
 locals {
   lambda_function_name = format("pump-%s-%s", var.environmentname, var.entity_name)
-  lambda_layer_name = format("pump-%s-%s", var.environmentname, var.entity_name)
+  lambda_layer_name    = format("pump-%s-%s", var.environmentname, var.entity_name)
   lambda_role          = format("pump-%s-%s", var.environmentname, var.entity_name)
   event_rule_name      = format("pump-%s-%s", var.environmentname, var.entity_name)
 }
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket = var.lambda_layer_bucket
-  s3_key = var.lambda_layer_key
-  layer_name = local.lambda_layer_name
+  s3_bucket           = var.lambda_layer_bucket
+  s3_key              = var.lambda_layer_key
+  layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_layer_runtime]
 }
 
@@ -29,7 +29,7 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       ddp_endpoint         = var.ddp_endpoint
       secrets_name         = var.secrets_name
-      glue_database   = var.glue_database
+      glue_database        = var.glue_database
       glue_table_name      = var.entity_name
       output_bucket        = var.output_bucket
       lambda_output_folder = var.entity_name

@@ -18,11 +18,6 @@ output "output_bucket" {
   value       = var.output_bucket
 }
 
-output "glue_database" {
-  description = "Name of the AWS Glue database"
-  value       = local.glue_database
-}
-
 output "log_group_name" {
   description = "Name of the AWS Cloudwatch log group"
   value       = aws_cloudwatch_log_group.log_lambda.name
