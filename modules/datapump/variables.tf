@@ -19,6 +19,13 @@ variable "ddp_endpoint" {
   default     = "none"
 }
 
+
+variable "lambda_builds_bucket" {
+  description = "Name s3 bucket for the lambda builds"
+  type        = string
+}
+
+
 variable "lambda_function_payload" {
   description = "Zip file containing the lambda function"
   type        = string
