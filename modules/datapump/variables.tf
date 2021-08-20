@@ -30,13 +30,6 @@ variable "output_bucket" {
   type        = string
 }
 
-
-variable "runtime" {
-  description = "Python runtime"
-  type        = string
-  default = "python3.8"
-}
-
 variable "lambda_function_payload" {
   description = "Zip file containing the lambda function"
   type        = string
@@ -44,10 +37,22 @@ variable "lambda_function_payload" {
 
 }
 
-variable "lambda_layer_payload" {
+variable "lambda_layer_bucket" {
   description = "Zip file containing the lambda layer"
   type        = string
-  default     = "lambda_layer_payload.zip"
+  default     = "aws-data-wrangler-public-artifacts"
+}
+
+variable "lambda_layer_key" {
+  description = "Zip file containing the lambda layer"
+  type        = string
+  default     = "releases/2.10.0/awswrangler-layer-2.10.0-py3.8.zip"
+}
+
+variable "lambda_layer_runtime" {
+  description = "Python runtime"
+  type        = string
+  default = "python3.8"
 }
 
 variable "lambda_handler" {
