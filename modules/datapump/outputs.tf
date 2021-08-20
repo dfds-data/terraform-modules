@@ -17,9 +17,9 @@ output "iam_role_name" {
   value       = aws_iam_role.instance.name
 }
 
-output "lambda_output_bucket" {
+output "output_bucket" {
   description = "Name of the output bucket"
-  value       = local.lambda_output_bucket
+  value       = var.output_bucket
 }
 
 output "athena_query_location_bucket" {

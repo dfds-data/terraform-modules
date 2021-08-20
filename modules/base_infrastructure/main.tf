@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "athena_query_location" {
   }
 }
 
-resource "aws_s3_bucket" "lambda_output_bucket" {
+resource "aws_s3_bucket" "output_bucket" {
   bucket_prefix = var.output_bucket
   acl           = "private"
   versioning {
