@@ -18,11 +18,6 @@ output "output_bucket" {
   value       = var.output_bucket
 }
 
-output "athena_query_location_bucket" {
-  description = "Name of the query location bucket"
-  value       = local.athena_query_location_bucket
-}
-
 output "glue_database_name" {
   description = "Name of the AWS Glue database"
   value       = local.glue_database_name
