@@ -13,8 +13,8 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  s3_bucket        = data.aws_s3_bucket_object.lambda_function_payload.bucket
-  s3_key           = data.aws_s3_bucket_object.lambda_function_payload.key
+  s3_bucket        = var.lambda_function_bucket
+  s3_key           = var.lambda_function_key
   function_name    = local.lambda_function_name
   role             = aws_iam_role.instance.arn
   handler          = var.lambda_handler

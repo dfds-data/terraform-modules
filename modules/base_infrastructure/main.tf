@@ -1,3 +1,9 @@
+locals {
+  output_path = format("%s/metrics_lambda_function_payload.zip", var.builds_bucket)
+}
+
+
+
 resource "aws_s3_bucket" "builds_bucket" {
   bucket_prefix = var.builds_bucket
   acl           = "private"
@@ -25,4 +31,18 @@ resource "aws_s3_bucket" "output_bucket" {
 
 resource "aws_glue_catalog_database" "glue_database" {
   name = var.glue_database
+}
+
+
+# Zip the Lamda function on the fly
+data "archive_file" "source" {
+  type        = "zip"
+  source_file = "source = 'git::https://github.com/dfds-data/terraform-modules/modules/base_infrastructure/lambda_function_payload.py'"
+  output_path = "lambda_functions/metrics_lambda_function_payload.zip"
+}
+# upload zip to s3 and then update lamda function from s3
+resource "aws_s3_bucket_object" "file_upload" {
+  bucket = "${aws_s3_bucket.builds_bucket.id}"
+  key    = "metrics_lambda_function_payload.zip"
+  source = "${data.archive_file.source.output_path}" # its mean it depended on zip
 }
