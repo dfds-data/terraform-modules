@@ -60,6 +60,12 @@ variable "lambda_handler" {
   type        = string
 }
 
+variable "glue_database" {
+  description = "Name of the glue database"
+  type        = string
+}
+
+
 variable "role_policies" {
   description = "List of policies attached to role"
   type        = list(string)
