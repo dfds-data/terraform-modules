@@ -10,7 +10,7 @@ output "output_bucket" {
   description = "Name of the s3 bucket for the output data"
   value       = aws_s3_bucket.output_bucket.id
 }
-output "aws_glue_catalog_database" {
+output "glue_database" {
   description = "Name of glue catalog database"
   value       = aws_glue_catalog_database.glue_database.id
 }
