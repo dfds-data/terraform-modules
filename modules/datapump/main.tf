@@ -29,7 +29,7 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       ddp_endpoint         = var.ddp_endpoint
       secrets_name         = var.secrets_name
-      glue_database_name   = var.glue_database_name
+      glue_database   = var.glue_database
       glue_table_name      = var.entity_name
       output_bucket        = var.output_bucket
       lambda_output_folder = var.entity_name
