@@ -1,14 +1,5 @@
 Reusable terraform modules.
 
-
-# Example 1
-Start by spinning up the base_infrastructure. The datapump expects
-
-# Example 2
-To use the datapump module in your infrastructure code import it by writing the following:
-
-```tf
-module "datapump" {
-  source                  = "github.com/dfds-data/terraform-modules/modules/datapump"
-  ...
-```
+# Build layer
+`docker build . -f layer.Dockerfile -t layer-module`
+`docker run -v ~\modules\datapump:/var/task/output layer-module`

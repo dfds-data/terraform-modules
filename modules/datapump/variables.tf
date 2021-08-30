@@ -87,3 +87,22 @@ variable "timeout" {
   type        = number
   default     = 12
 }
+
+
+variable "create_layer" {
+  description = "Whether to create new layer."
+  type        = bool
+  default     = false
+}
+
+variable "create_package_layer" {
+    description = "Whether to package for layer from zip."
+  type        = bool
+  default     = false
+}
+
+variable "create_package_function" {
+    description = "Whether to package for layer from zip."
+  type        = bool
+  default     = false
+}

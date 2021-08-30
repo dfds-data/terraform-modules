@@ -5,28 +5,40 @@ locals {
   event_rule_name      = format("pump-%s-%s", var.environmentname, var.entity_name)
 }
 
-resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = var.lambda_layer_bucket
-  s3_key              = var.lambda_layer_key
+module "lambda_layer_s3" {
+  source = "terraform-aws-modules/lambda/aws"
+
+  create_layer = var.create_layer
+
   layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_layer_runtime]
+
+  create_package = var.create_package_layer
+  s3_existing_package = {
+    bucket = var.lambda_layer_bucket
+    key    = var.lambda_layer_key
+  }
 }
 
-resource "aws_lambda_function" "lambda_function" {
-  s3_bucket        = var.builds_bucket
-  s3_key           = var.lambda_function_payload
+
+module "lambda_function_externally_managed_package" {
+  source = "terraform-aws-modules/lambda/aws"
+
   function_name    = local.lambda_function_name
   role             = aws_iam_role.instance.arn
   handler          = var.lambda_handler
   runtime          = var.lambda_layer_runtime
-  source_code_hash = data.aws_s3_bucket_object.lambda_function_payload_hash.body
-  layers = [
-    aws_lambda_layer_version.lambda_layer.arn,
-  ]
+
+  create_package         = var.create_package_function
+  local_existing_package = "./lambda_functions/code.zip"
+
+  ignore_source_code_hash = true
   timeout     = var.timeout
   memory_size = var.memory_size
-  environment {
-    variables = {
+  layers = [
+    module.lambda_layer_s3.lambda_layer_arn,
+  ]
+  environment_variables = {
       ddp_endpoint         = var.ddp_endpoint
       secrets_name         = var.secrets_name
       glue_database        = var.glue_database
@@ -35,8 +47,8 @@ resource "aws_lambda_function" "lambda_function" {
       lambda_output_folder = var.entity_name
       environmentname      = var.environmentname
     }
-  }
 }
+
 
 resource "aws_cloudwatch_event_rule" "rate" {
   name                = local.event_rule_name
@@ -46,7 +58,7 @@ resource "aws_cloudwatch_event_rule" "rate" {
 resource "aws_cloudwatch_event_target" "target" {
   rule      = aws_cloudwatch_event_rule.rate.name
   target_id = local.lambda_function_name
-  arn       = aws_lambda_function.lambda_function.arn
+  arn       = module.lambda_function_externally_managed_package.lambda_function_arn
 }
 
 

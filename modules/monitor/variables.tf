@@ -47,3 +47,9 @@ variable "role_policies" {
 variable "lambda_builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
 }
+
+variable "lambda_function_payload_source_file" {
+  description = "Name of the lambda function source file"
+  type        = string
+  default     = "lambda_function_payload_monitoring.py"
+}

@@ -18,3 +18,4 @@ data "aws_s3_bucket_object" "lambda_function_payload" {
   bucket = var.builds_bucket
   key    = format("%s", var.lambda_function_payload)
 }
+
