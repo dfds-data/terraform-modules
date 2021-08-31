@@ -28,7 +28,7 @@ module "lambda_function_externally_managed_package" {
   runtime       = "python3.8"
   
   create_package = var.create_package_function
-
+  create_function = true
   s3_existing_package = {
     bucket = var.builds_bucket
     key    = var.lambda_function_payload
