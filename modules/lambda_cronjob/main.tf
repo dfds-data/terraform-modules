@@ -40,7 +40,6 @@ module "lambda_function_externally_managed_package" {
   layers = [
     module.lambda_layer_s3.lambda_layer_arn,
   ]
-  environment_variables = var.lambda_env_vars
 }
 
 resource "aws_cloudwatch_event_rule" "rate" {

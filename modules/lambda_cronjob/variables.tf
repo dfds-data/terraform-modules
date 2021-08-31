@@ -65,9 +65,6 @@ variable "role_policies" {
   type        = list(string)
 }
 
-variable "lambda_env_vars" {
-  type = "map"
-}
 
 variable "create_layer" {
   description = "Whether to create new layer."
