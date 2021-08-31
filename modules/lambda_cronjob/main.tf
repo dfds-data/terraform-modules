@@ -24,8 +24,8 @@ module "lambda_function_externally_managed_package" {
   source = "terraform-aws-modules/lambda/aws"
 
   function_name = local.lambda_function_name
-  handler       = var.lambda_handler
-  runtime       = var.lambda_layer_runtime
+  handler       = "lol"
+  runtime       = "python3.8"
   
   create_package = var.create_package_function
 
