@@ -1,3 +1,8 @@
+variable "cloudwatch_retention_days" {
+  type        = number
+  default = 14
+}
+
 variable "entity_name" {
   description = "Name of the data entity you will create a data pump for"
   type        = string
@@ -13,19 +18,7 @@ variable "rate_expression" {
   type        = string
 }
 
-variable "ddp_endpoint" {
-  description = "URL of the ddp endpoint"
-  type        = string
-  default     = "none"
-}
-
-
 variable "builds_bucket" {
-  description = "Name s3 bucket for the lambda builds"
-  type        = string
-}
-
-variable "output_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
 }
@@ -37,43 +30,10 @@ variable "lambda_function_payload" {
 
 }
 
-variable "lambda_layer_bucket" {
-  description = "Zip file containing the lambda layer"
-  type        = string
-  default     = "aws-data-wrangler-public-artifacts"
-}
-
-variable "lambda_layer_key" {
+variable "lambda_layer_payload" {
   description = "Zip file containing the lambda layer"
   type        = string
   default     = "releases/2.10.0/awswrangler-layer-2.10.0-py3.8.zip"
-}
-
-variable "lambda_layer_runtime" {
-  description = "Python runtime"
-  type        = string
-  default = "python3.8"
-}
-
-variable "lambda_handler" {
-  description = "Lambda handler"
-  type        = string
-}
-
-variable "glue_database" {
-  description = "Name of the glue database"
-  type        = string
-}
-
-
-variable "role_policies" {
-  description = "List of policies attached to role"
-  type        = list(string)
-}
-
-variable "secrets_name" {
-  description = "Name of the secret in secrets manager"
-  type        = string
 }
 
 variable "memory_size" {
@@ -88,6 +48,26 @@ variable "timeout" {
   default     = 12
 }
 
+
+variable "lambda_layer_runtime" {
+  description = "Python runtime"
+  type        = string
+  default = "python3.8"
+}
+
+variable "lambda_handler" {
+  description = "Lambda handler"
+  type        = string
+}
+
+variable "role_policies" {
+  description = "List of policies attached to role"
+  type        = list(string)
+}
+
+variable "lambda_env_vars" {
+  type = "map"
+}
 
 variable "create_layer" {
   description = "Whether to create new layer."

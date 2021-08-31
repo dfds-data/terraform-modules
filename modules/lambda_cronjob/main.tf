@@ -1,8 +1,8 @@
 locals {
-  lambda_function_name = format("pump-%s-%s", var.environmentname, var.entity_name)
-  lambda_layer_name    = format("pump-%s-%s", var.environmentname, var.entity_name)
-  lambda_role          = format("pump-%s-%s", var.environmentname, var.entity_name)
-  event_rule_name      = format("pump-%s-%s", var.environmentname, var.entity_name)
+  lambda_function_name = format("cron-%s-%s", var.environmentname, var.entity_name)
+  lambda_layer_name    = format("cron-%s-%s", var.environmentname, var.entity_name)
+  lambda_role          = format("cron-%s-%s", var.environmentname, var.entity_name)
+  event_rule_name      = format("cron-%s-%s", var.environmentname, var.entity_name)
 }
 
 module "lambda_layer_s3" {
@@ -15,40 +15,33 @@ module "lambda_layer_s3" {
 
   create_package = var.create_package_layer
   s3_existing_package = {
-    bucket = var.lambda_layer_bucket
-    key    = var.lambda_layer_key
+    bucket = var.builds_bucket
+    key    = var.lambda_layer_payload
   }
 }
-
 
 module "lambda_function_externally_managed_package" {
   source = "terraform-aws-modules/lambda/aws"
 
-  function_name    = local.lambda_function_name
-  # role             = aws_iam_role.instance.arn
-  handler          = var.lambda_handler
-  runtime          = var.lambda_layer_runtime
+  function_name = local.lambda_function_name
+  handler       = var.lambda_handler
+  runtime       = var.lambda_layer_runtime
 
-  create_package         = var.create_package_function
-  local_existing_package = "./lambda_functions/code.zip"
+  create_package = var.create_package_function
+
+  s3_existing_package = {
+    bucket = var.builds_bucket
+    key    = var.lambda_function_payload
+  }
 
   ignore_source_code_hash = true
-  timeout     = var.timeout
-  memory_size = var.memory_size
+  timeout                 = var.timeout
+  memory_size             = var.memory_size
   layers = [
     module.lambda_layer_s3.lambda_layer_arn,
   ]
-  environment_variables = {
-      ddp_endpoint         = var.ddp_endpoint
-      secrets_name         = var.secrets_name
-      glue_database        = var.glue_database
-      glue_table_name      = var.entity_name
-      output_bucket        = var.output_bucket
-      lambda_output_folder = var.entity_name
-      environmentname      = var.environmentname
-    }
+  environment_variables = var.lambda_env_vars
 }
-
 
 resource "aws_cloudwatch_event_rule" "rate" {
   name                = local.event_rule_name
@@ -60,7 +53,6 @@ resource "aws_cloudwatch_event_target" "target" {
   target_id = local.lambda_function_name
   arn       = module.lambda_function_externally_managed_package.lambda_function_arn
 }
-
 
 resource "aws_iam_role" "instance" {
   name               = local.lambda_role
@@ -84,5 +76,5 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
 
 resource "aws_cloudwatch_log_group" "log_lambda" {
   name              = "/aws/lambda/${local.lambda_function_name}"
-  retention_in_days = 14
+  retention_in_days = var.cloudwatch_retention_days
 }

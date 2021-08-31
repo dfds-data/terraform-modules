@@ -14,9 +14,4 @@ output "glue_database" {
   description = "Name of glue catalog database"
   value       = aws_glue_catalog_database.glue_database.id
 }
-output "lambda_function_payload" {
-  description = "Key to the lambda function"
-  value       = aws_s3_bucket_object.file_upload.key
-}
-
 
