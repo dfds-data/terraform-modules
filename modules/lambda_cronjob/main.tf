@@ -15,8 +15,8 @@ module "lambda_layer_s3" {
   role_name = "hellolsdkndj"
   create_package = var.create_package_layer
   s3_existing_package = {
-    bucket = var.builds_bucket
-    key    = var.lambda_layer_payload
+    bucket = data.aws_s3_bucket_object.lambda_layer_payload.bucket
+    key    = data.aws_s3_bucket_object.lambda_layer_payload.key
   }
 }
 
@@ -30,8 +30,8 @@ module "lambda_function_existing_package_s3" {
   create_package = var.create_package_function
   create_function = true
   s3_existing_package = {
-    bucket = var.builds_bucket
-    key    = var.lambda_function_payload
+    bucket = data.aws_s3_bucket_object.lambda_function_payload.bucket
+    key    = data.aws_s3_bucket_object.lambda_function_payload.key
   }
 
   ignore_source_code_hash = true
