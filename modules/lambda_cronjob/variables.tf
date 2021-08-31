@@ -75,11 +75,11 @@ variable "create_layer" {
 variable "create_package_layer" {
     description = "Whether to package for layer from zip."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "create_package_function" {
     description = "Whether to package for layer from zip."
   type        = bool
-  default     = true
+  default     = false
 }
