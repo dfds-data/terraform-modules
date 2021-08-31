@@ -5,42 +5,28 @@ locals {
   event_rule_name      = format("cron-%s-%s", var.environmentname, var.entity_name)
 }
 
-module "lambda_layer_s3" {
-  source = "terraform-aws-modules/lambda/aws"
 
-  create_layer = var.create_layer
-
+resource "aws_lambda_layer_version" "lambda_layer" {
+  s3_bucket           = data.aws_s3_bucket_object.lambda_layer_payload.bucket
+  s3_key              = data.aws_s3_bucket_object.lambda_layer_payload.key
   layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_layer_runtime]
-  role_name = "hellolsdkndj"
-  create_package = var.create_package_layer
-  s3_existing_package = {
-    bucket = data.aws_s3_bucket_object.lambda_layer_payload.bucket
-    key    = data.aws_s3_bucket_object.lambda_layer_payload.key
-  }
 }
 
-module "lambda_function_existing_package_s3" {
-  source = "terraform-aws-modules/lambda/aws"
-
-  function_name = local.lambda_function_name
-  handler       = "lol"
-  runtime       = "python3.8"
-  
-  create_package = var.create_package_function
-  create_function = true
-  s3_existing_package = {
-    bucket = data.aws_s3_bucket_object.lambda_function_payload.bucket
-    key    = data.aws_s3_bucket_object.lambda_function_payload.key
-  }
-
-  ignore_source_code_hash = true
-  timeout                 = var.timeout
-  memory_size             = var.memory_size
+resource "aws_lambda_function" "lambda_function" {
+  s3_bucket        = data.aws_s3_bucket_object.lambda_function_payload.bucket
+  s3_key           = data.aws_s3_bucket_object.lambda_function_payload.key
+  function_name    = local.lambda_function_name
+  role             = aws_iam_role.instance.arn
+  handler          = var.lambda_handler
+  runtime          = "python3.8"
   layers = [
-    module.lambda_layer_s3.lambda_layer_arn,
+    aws_lambda_layer_version.lambda_layer.arn,
   ]
+  timeout = var.timeout
+  memory_size = var.memory_size
 }
+
 
 resource "aws_cloudwatch_event_rule" "rate" {
   name                = local.event_rule_name
@@ -51,6 +37,17 @@ resource "aws_cloudwatch_event_target" "target" {
   rule      = aws_cloudwatch_event_rule.rate.name
   target_id = local.lambda_function_name
   arn       = module.lambda_function_existing_package_s3.lambda_function_arn
+}
+
+resource "aws_iam_role" "instance" {
+  name               = local.lambda_role
+  assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
+  for_each   = toset(var.role_policies)
+  role       = aws_iam_role.instance.name
+  policy_arn = each.value
 }
 
 
