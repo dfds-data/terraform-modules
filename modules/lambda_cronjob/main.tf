@@ -12,7 +12,7 @@ module "lambda_layer_s3" {
 
   layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_layer_runtime]
-
+  role_name = "hellolsdkndj"
   create_package = var.create_package_layer
   s3_existing_package = {
     bucket = var.builds_bucket
@@ -26,7 +26,7 @@ module "lambda_function_externally_managed_package" {
   function_name = local.lambda_function_name
   handler       = var.lambda_handler
   runtime       = var.lambda_layer_runtime
-  role_name = "hellolsdkndj"
+  
   create_package = var.create_package_function
 
   s3_existing_package = {
