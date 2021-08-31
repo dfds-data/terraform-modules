@@ -50,7 +50,7 @@ resource "aws_cloudwatch_event_rule" "rate" {
 resource "aws_cloudwatch_event_target" "target" {
   rule      = aws_cloudwatch_event_rule.rate.name
   target_id = local.lambda_function_name
-  arn       = module.lambda_function_externally_managed_package.lambda_function_arn
+  arn       = module.lambda_function_existing_package_s3.lambda_function_arn
 }
 
 
