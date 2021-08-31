@@ -17,9 +17,3 @@ variable "glue_database" {
   description = "Name of the Glue database"
   type        = string
 }
-
-variable "lambda_function_payload_source_file" {
-  description = "Name of the lambda function source file"
-  type        = string
-  default     = "lambda_function_payload.py"
-}
