@@ -26,7 +26,7 @@ module "lambda_function_externally_managed_package" {
   function_name = local.lambda_function_name
   handler       = var.lambda_handler
   runtime       = var.lambda_layer_runtime
-
+  role_name = "hellolsdkndj"
   create_package = var.create_package_function
 
   s3_existing_package = {
