@@ -15,8 +15,6 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   lifecycle {
     ignore_changes = [
       "source_code_hash",
-      "last_modified",
-      "qualified_arn",
       "version"
     ]
   }
