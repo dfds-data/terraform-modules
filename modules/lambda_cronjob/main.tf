@@ -53,10 +53,6 @@ resource "aws_cloudwatch_event_target" "target" {
   arn       = module.lambda_function_externally_managed_package.lambda_function_arn
 }
 
-resource "aws_iam_role" "instance" {
-  name               = local.lambda_role
-  assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
-}
 
 resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
   for_each   = toset(var.role_policies)
