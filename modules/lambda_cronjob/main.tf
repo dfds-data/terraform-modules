@@ -54,12 +54,6 @@ resource "aws_cloudwatch_event_target" "target" {
 }
 
 
-resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
-  for_each   = toset(var.role_policies)
-  role       = aws_iam_role.instance.name
-  policy_arn = each.value
-}
-
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
