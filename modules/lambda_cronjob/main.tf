@@ -20,7 +20,7 @@ module "lambda_layer_s3" {
   }
 }
 
-module "lambda_function_externally_managed_package" {
+module "lambda_function_existing_package_s3" {
   source = "terraform-aws-modules/lambda/aws"
 
   function_name = local.lambda_function_name
