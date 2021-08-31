@@ -10,7 +10,16 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   s3_bucket           = data.aws_s3_bucket_object.lambda_layer_payload.bucket
   s3_key              = data.aws_s3_bucket_object.lambda_layer_payload.key
   layer_name          = local.lambda_layer_name
-  compatible_runtimes = [var.lambda_layer_runtime]
+  compatible_runtimes = [var.lambda_runtime]
+  source_code_hash = data.aws_s3_bucket_object.lambda_layer_payload_hash.body
+  lifecycle {
+    ignore_changes = [
+      "source_code_hash",
+      "last_modified",
+      "qualified_arn",
+      "version"
+    ]
+  }
 }
 
 resource "aws_lambda_function" "lambda_function" {
@@ -19,12 +28,21 @@ resource "aws_lambda_function" "lambda_function" {
   function_name    = local.lambda_function_name
   role             = aws_iam_role.instance.arn
   handler          = var.lambda_handler
-  runtime          = "python3.8"
+  runtime          = var.lambda_runtime
   layers = [
     aws_lambda_layer_version.lambda_layer.arn,
   ]
   timeout = var.timeout
   memory_size = var.memory_size
+  source_code_hash = data.aws_s3_bucket_object.lambda_function_payload_hash.body
+  lifecycle {
+    ignore_changes = [
+      "source_code_hash",
+      "last_modified",
+      "qualified_arn",
+      "version"
+    ]
+  }
 }
 
 
