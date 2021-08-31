@@ -25,7 +25,7 @@ module "lambda_function_externally_managed_package" {
   source = "terraform-aws-modules/lambda/aws"
 
   function_name    = local.lambda_function_name
-  role             = aws_iam_role.instance.arn
+  # role             = aws_iam_role.instance.arn
   handler          = var.lambda_handler
   runtime          = var.lambda_layer_runtime
 
