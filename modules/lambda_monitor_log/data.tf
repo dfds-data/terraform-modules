@@ -18,7 +18,7 @@ data "archive_file" "function" {
 
 data "archive_file" "layer" {
   type        = "zip"
-  source_dir = "${path.module}/../dummy_files/python"
+  source_dir = "${path.module}/python"
   output_path = "${path.module}/monitor_log_lambda_layer_payload.zip"
   
 }
