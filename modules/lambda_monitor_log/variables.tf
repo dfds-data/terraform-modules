@@ -22,11 +22,6 @@ variable "builds_bucket" {
   type        = string
 }
 
-variable "lambda_layer_payload" {
-  description = "Zip file containing the lambda layer"
-  type        = string
-}
-
 
 variable "role_policies" {
   description = "List of policies attached to role"
