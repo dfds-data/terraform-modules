@@ -1,3 +1,6 @@
+# Introduction
+Sets up the base infrastructure for the other modules in this repository.
+
 # How to use
 
 Set up the base infrastructure by running the base infrastructure module

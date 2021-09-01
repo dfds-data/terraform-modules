@@ -35,7 +35,8 @@ resource "aws_lambda_function" "lambda_function" {
       "last_modified",
       "qualified_arn",
       "version",
-      "handler"
+      "handler",
+      "environment"
     ]
   }
 }
@@ -91,6 +92,6 @@ resource "aws_s3_bucket_object" "function" {
 
 resource "aws_s3_bucket_object" "layer" {
   bucket = var.builds_bucket
-  key    = "cronjob_lambda_layer_payload.zip"
+  key    = data "archive_file" "layer"
   source = data.archive_file.layer.output_path
 }
