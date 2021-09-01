@@ -73,8 +73,8 @@ resource "aws_s3_bucket_object" "function" {
   source = data.archive_file.function.output_path
 }
 
-resource "aws_s3_bucket_object" "object" {
+resource "aws_s3_bucket_object" "layer" {
   bucket = var.builds_bucket
-  key    = "monitor_log_lambda_function_payload.zip"
-  source = data.archive_file.function.output_path
+  key    = "monitor_log_lambda_layer_payload.zip"
+  source = data.archive_file.layer.output_path
 }
