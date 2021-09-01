@@ -2,13 +2,13 @@ locals {
   lambda_function_name = format("%s-mntr-%s", var.entity_name, var.environmentname)
   lambda_layer_name    = format("%s-mntr-%s", var.entity_name, var.environmentname)
   lambda_role          = format("%s-mntr-%s", var.entity_name, var.environmentname)
-   logfilter_name      = format("%s-mntr-%s", var.entity_name, var.environmentname)
+  logfilter_name       = format("%s-mntr-%s", var.entity_name, var.environmentname)
 }
 
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket        = var.builds_bucket
-  s3_key           = resource.aws_s3_bucket_object.layer.key
+  s3_bucket           = var.builds_bucket
+  s3_key              = resource.aws_s3_bucket_object.layer.key
   layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
@@ -20,16 +20,16 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 
 
 resource "aws_lambda_function" "lambda_function" {
-  s3_bucket        = var.builds_bucket
-  s3_key           = resource.aws_s3_bucket_object.function.key
-  function_name    = local.lambda_function_name
-  role             = aws_iam_role.instance.arn
-  handler          = "monitor_log.lambda_handler"
-  runtime          = var.lambda_runtime
+  s3_bucket     = var.builds_bucket
+  s3_key        = resource.aws_s3_bucket_object.function.key
+  function_name = local.lambda_function_name
+  role          = aws_iam_role.instance.arn
+  handler       = "monitor_log.lambda_handler"
+  runtime       = var.lambda_runtime
   layers = [
     aws_lambda_layer_version.lambda_layer.arn,
   ]
-  timeout = var.timeout
+  timeout     = var.timeout
   memory_size = var.memory_size
   lifecycle {
     ignore_changes = [
@@ -69,9 +69,8 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
     ignore_changes = [
       "filter_pattern",
     ]
-    }
   }
-
+}
 resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
   key    = "monitor_log_lambda_function_payload.zip"

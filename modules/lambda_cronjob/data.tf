@@ -17,7 +17,7 @@ data "archive_file" "function" {
 
 data "archive_file" "layer" {
   type        = "zip"
-  source_dir = "${path.module}/../python_files/python"
+  source_dir  = "${path.module}/../python_files/python"
   output_path = "${path.module}/cronjob_lambda_layer_payload.zip"
-  
+
 }
