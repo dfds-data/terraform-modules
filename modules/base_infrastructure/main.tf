@@ -26,3 +26,4 @@ resource "aws_s3_bucket" "output_bucket" {
 resource "aws_glue_catalog_database" "glue_database" {
   name = var.glue_database
 }
+ 

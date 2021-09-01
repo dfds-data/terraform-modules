@@ -82,3 +82,4 @@ resource "aws_s3_bucket_object" "layer" {
   key    = "monitor_log_lambda_layer_payload.zip"
   source = data.archive_file.layer.output_path
 }
+ 

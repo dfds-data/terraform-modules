@@ -29,3 +29,4 @@ def lambda_handler(event, context):
     loggroup = payload["logGroup"]
     message = f"*{loggroup}*: \n \n {message}"
     send_teams_message(hook_url, message)
+ 

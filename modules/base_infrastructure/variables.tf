@@ -17,3 +17,4 @@ variable "glue_database" {
   description = "Name of the Glue database"
   type        = string
 }
+ 

@@ -15,3 +15,4 @@ output "glue_database" {
   value       = aws_glue_catalog_database.glue_database.id
 }
 
+ 

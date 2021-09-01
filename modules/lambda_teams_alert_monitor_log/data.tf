@@ -22,3 +22,4 @@ data "archive_file" "layer" {
   output_path = "${path.module}/monitor_log_lambda_layer_payload.zip"
 
 }
+ 

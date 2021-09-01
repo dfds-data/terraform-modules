@@ -7,7 +7,7 @@ data "aws_iam_policy_document" "instance-assume-role-policy" {
       identifiers = ["lambda.amazonaws.com"]
     }
   }
-}
+} 
 
 data "archive_file" "function" {
   type        = "zip"
