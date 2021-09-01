@@ -1,5 +1,6 @@
 locals {
   lambda_function_name = format("mntr-%s-%s", var.environmentname, var.entity_name)
+  lambda_layer_name    = format("mntr-%s-%s", var.environmentname, var.entity_name)
   lambda_role          = format("mntr-%s-%s", var.environmentname, var.entity_name)
   logfilter_name      = format("mntr-%s-%s", var.environmentname, var.entity_name)
 }
