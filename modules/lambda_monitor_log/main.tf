@@ -1,14 +1,14 @@
 locals {
-  lambda_function_name = format("mntr-%s-%s", var.environmentname, var.entity_name)
-  lambda_layer_name    = format("mntr-%s-%s", var.environmentname, var.entity_name)
-  lambda_role          = format("mntr-%s-%s", var.environmentname, var.entity_name)
-  logfilter_name      = format("mntr-%s-%s", var.environmentname, var.entity_name)
+  lambda_function_name = format("%s-mntr-%s", var.entity_name, var.environmentname)
+  lambda_layer_name    = format("%s-mntr-%s", var.entity_name, var.environmentname)
+  lambda_role          = format("%s-mntr-%s", var.entity_name, var.environmentname)
+   logfilter_name      = format("%s-mntr-%s", var.entity_name, var.environmentname)
 }
 
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = var.builds_bucket
-  s3_key              = data.aws_s3_bucket_object.lambda_layer_payload.key
+  s3_bucket        = var.builds_bucket
+  s3_key           = resource.aws_s3_bucket_object.layer.key
   layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
@@ -21,7 +21,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket        = var.builds_bucket
-  s3_key           = resource.aws_s3_bucket_object.object.key
+  s3_key           = resource.aws_s3_bucket_object.function.key
   function_name    = local.lambda_function_name
   role             = aws_iam_role.instance.arn
   handler          = "monitor_log.lambda_handler"
@@ -67,8 +67,14 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
   destination_arn = aws_lambda_function.lambda_function.arn
 }
 
+resource "aws_s3_bucket_object" "function" {
+  bucket = var.builds_bucket
+  key    = "monitor_log_lambda_function_payload.zip"
+  source = data.archive_file.function.output_path
+}
+
 resource "aws_s3_bucket_object" "object" {
   bucket = var.builds_bucket
-  key    = "monitor_log.zip"
-  source = data.archive_file.init.output_path
+  key    = "monitor_log_lambda_function_payload.zip"
+  source = data.archive_file.function.output_path
 }

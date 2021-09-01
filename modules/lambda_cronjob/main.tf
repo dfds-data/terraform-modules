@@ -1,8 +1,8 @@
 locals {
-  lambda_function_name = format("cron-%s-%s", var.environmentname, var.entity_name)
-  lambda_layer_name    = format("cron-%s-%s", var.environmentname, var.entity_name)
-  lambda_role          = format("cron-%s-%s", var.environmentname, var.entity_name)
-  event_rule_name      = format("cron-%s-%s", var.environmentname, var.entity_name)
+  lambda_function_name = format("%s-cron-%s", var.entity_name, var.environmentname)
+  lambda_layer_name    = format("%s-cron-%s", var.entity_name, var.environmentname)
+  lambda_role          = format("%s-cron-%s", var.entity_name, var.environmentname)
+  event_rule_name      = format("%s-cron-%s", var.entity_name, var.environmentname)
 }
 
 
