@@ -6,7 +6,7 @@ locals {
 
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = data.aws_s3_bucket_object.lambda_layer_payload.bucket
+  s3_bucket           = var.builds_bucket
   s3_key              = data.aws_s3_bucket_object.lambda_layer_payload.key
   layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_runtime]
@@ -19,7 +19,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 
 
 resource "aws_lambda_function" "lambda_function" {
-  s3_bucket        = resource.aws_s3_bucket_object.object.bucket
+  s3_bucket        = var.builds_bucket
   s3_key           = resource.aws_s3_bucket_object.object.key
   function_name    = local.lambda_function_name
   role             = aws_iam_role.instance.arn
@@ -67,7 +67,7 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
 }
 
 resource "aws_s3_bucket_object" "object" {
-  bucket = data.aws_s3_bucket_object.lambda_layer_payload.bucket
+  bucket = var.builds_bucket
   key    = "monitor.zip"
   source = "./monitor.zip"
 }

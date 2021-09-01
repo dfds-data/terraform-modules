@@ -18,5 +18,5 @@ data "archive_file" "init" {
 
 data "aws_s3_bucket_object" "lambda_layer_payload" {
   bucket = var.builds_bucket
-  key    = format("%s", var.lambda_layer_payload)
+  key    = var.lambda_layer_payload
 }

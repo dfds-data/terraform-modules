@@ -17,6 +17,10 @@ variable "filterpattern" {
   type        = string
 }
 
+variable "builds_bucket" {
+  description = "Name s3 bucket for the lambda builds"
+  type        = string
+}
 
 variable "lambda_layer_payload" {
   description = "Zip file containing the lambda layer"
