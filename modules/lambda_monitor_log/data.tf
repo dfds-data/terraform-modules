@@ -11,8 +11,9 @@ data "aws_iam_policy_document" "instance-assume-role-policy" {
 
 data "archive_file" "init" {
   type        = "zip"
-  source_file = "monitor_log.py"
-  output_path = "monitor_log.zip"
+  source_file = "${path.module}/monitor_log.py"
+  output_path = "${path.module}/monitor_log.zip"
+  
 }
 
 
