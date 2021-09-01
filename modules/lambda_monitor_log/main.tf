@@ -70,5 +70,6 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
 resource "aws_s3_bucket_object" "object" {
   bucket = var.builds_bucket
   key    = "monitor_log.zip"
-  source = "monitor_log.zip"
+  source = "${path.module}/monitor_log.zip"
+  etag   = "${filemd5("${path.module}/monitor_log.zip")}"
 }
