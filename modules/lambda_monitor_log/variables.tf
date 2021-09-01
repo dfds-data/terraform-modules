@@ -22,11 +22,6 @@ variable "filterpattern" {
   type        = string
 }
 
-variable "lambda_function_payload" {
-  description = "Zip file containing the lambda function"
-  type        = string
-}
-
 variable "lambda_handler" {
   description = "lambda handler"
   type        = string

@@ -12,11 +12,8 @@ logger.setLevel(logging.INFO)
 
 def read_event(event):
     compressed_payload = b64decode(event["awslogs"]["data"])
-
     uncompressed_payload = gzip.decompress(compressed_payload)
-
     payload = json.loads(uncompressed_payload)
-    
     return payload
 
 def send_teams_message(hook_url, message):
