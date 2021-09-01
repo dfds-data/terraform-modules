@@ -23,11 +23,6 @@ variable "lambda_layer_payload" {
   type        = string
 }
 
-variable "webhook_url" {
-  description = "Webhook-url"
-  type        = string
-}
-
 
 variable "role_policies" {
   description = "List of policies attached to role"
