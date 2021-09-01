@@ -23,7 +23,7 @@ resource "aws_lambda_function" "lambda_function" {
   s3_key           = resource.aws_s3_bucket_object.object.key
   function_name    = local.lambda_function_name
   role             = aws_iam_role.instance.arn
-  handler          = var.lambda_handler
+  handler          = "monitor_log.lambda_handler"
   runtime          = var.lambda_runtime
   layers = [
     aws_lambda_layer_version.lambda_layer.arn,
