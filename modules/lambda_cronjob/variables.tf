@@ -22,7 +22,7 @@ variable "rate_expression" {
 variable "lambda_handler" {
   description = "Lambda handler"
   type        = string
-  default = "index.handler"
+  default = "dummy_function.handler"
 }
 
 variable "role_policies" {
