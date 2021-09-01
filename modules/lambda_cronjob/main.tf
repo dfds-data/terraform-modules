@@ -7,8 +7,8 @@ locals {
 
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = data.aws_s3_bucket_object.lambda_layer_payload.bucket
-  s3_key              = data.aws_s3_bucket_object.lambda_layer_payload.key
+  s3_bucket           = var.builds_bucket
+  s3_key              = resource.aws_s3_bucket_object.layer.key
   layer_name          = local.lambda_layer_name
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
@@ -19,22 +19,23 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  s3_bucket        = data.aws_s3_bucket_object.lambda_function_payload.bucket
-  s3_key           = data.aws_s3_bucket_object.lambda_function_payload.key
-  function_name    = local.lambda_function_name
-  role             = aws_iam_role.instance.arn
-  handler          = var.lambda_handler
-  runtime          = var.lambda_runtime
+  s3_bucket     = var.builds_bucket
+  s3_key        = resource.aws_s3_bucket_object.function.key
+  function_name = local.lambda_function_name
+  role          = aws_iam_role.instance.arn
+  handler       = var.lambda_handler
+  runtime       = var.lambda_runtime
   layers = [
     aws_lambda_layer_version.lambda_layer.arn,
   ]
-  timeout = var.timeout
+  timeout     = var.timeout
   memory_size = var.memory_size
   lifecycle {
     ignore_changes = [
       "last_modified",
       "qualified_arn",
-      "version"
+      "version",
+      "handler"
     ]
   }
 }
@@ -43,6 +44,11 @@ resource "aws_lambda_function" "lambda_function" {
 resource "aws_cloudwatch_event_rule" "rate" {
   name                = local.event_rule_name
   schedule_expression = var.rate_expression
+  lifecycle {
+    ignore_changes = [
+      "schedule_expression"
+    ]
+  }
 }
 
 resource "aws_cloudwatch_event_target" "target" {
@@ -75,4 +81,16 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
 resource "aws_cloudwatch_log_group" "log_lambda" {
   name              = "/aws/lambda/${local.lambda_function_name}"
   retention_in_days = var.cloudwatch_retention_days
+}
+
+resource "aws_s3_bucket_object" "function" {
+  bucket = var.builds_bucket
+  key    = "cronjob_lambda_function_payload.zip"
+  source = data.archive_file.function.output_path
+}
+
+resource "aws_s3_bucket_object" "layer" {
+  bucket = var.builds_bucket
+  key    = "cronjob_lambda_layer_payload.zip"
+  source = data.archive_file.layer.output_path
 }

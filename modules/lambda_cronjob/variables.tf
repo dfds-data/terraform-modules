@@ -8,29 +8,21 @@ variable "environmentname" {
   type        = string
 }
 
-variable "rate_expression" {
-  description = "Rate of execution of the lambda function. This should be a rate expression, e.g. rate(15 days) or rate(30 minutes). See more: https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html"
-  type        = string
-}
-
 variable "builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
 }
 
-variable "lambda_function_payload" {
-  description = "Zip file containing the lambda function"
+variable "rate_expression" {
+  description = "Rate of execution of the lambda function. This should be a rate expression, e.g. rate(15 days) or rate(30 minutes). See more: https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html"
   type        = string
-}
-
-variable "lambda_layer_payload" {
-  description = "Zip file containing the lambda layer"
-  type        = string
+  default = "rate(30 days)"
 }
 
 variable "lambda_handler" {
   description = "Lambda handler"
   type        = string
+  default = "index.handler"
 }
 
 variable "role_policies" {

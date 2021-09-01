@@ -15,6 +15,7 @@ variable "log_group" {
 variable "filterpattern" {
   description = "Filter pattern"
   type        = string
+  default     = "ERROR"
 }
 
 variable "builds_bucket" {
@@ -32,11 +33,11 @@ variable "role_policies" {
 variable "lambda_runtime" {
   description = "Python runtime"
   type        = string
-  default = "python3.8"
+  default     = "python3.8"
 }
 
 variable "cloudwatch_retention_days" {
-  type        = number
+  type    = number
   default = 14
 }
 

@@ -65,7 +65,12 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
   log_group_name  = var.log_group
   filter_pattern  = var.filterpattern
   destination_arn = aws_lambda_function.lambda_function.arn
-}
+  lifecycle {
+    ignore_changes = [
+      "filter_pattern",
+    ]
+    }
+  }
 
 resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket

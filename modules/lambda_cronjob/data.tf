@@ -9,13 +9,15 @@ data "aws_iam_policy_document" "instance-assume-role-policy" {
   }
 }
 
-data "aws_s3_bucket_object" "lambda_function_payload" {
-  bucket = var.builds_bucket
-  key    = var.lambda_function_payload
+data "archive_file" "function" {
+  type        = "zip"
+  source_file = "${path.module}/../dummy_files/index.py"
+  output_path = "${path.module}/cronjob_lambda_function_payload.zip"
 }
 
-
-data "aws_s3_bucket_object" "lambda_layer_payload" {
-  bucket = var.builds_bucket
-  key    = var.lambda_layer_payload
+data "archive_file" "layer" {
+  type        = "zip"
+  source_dir = "${path.module}/../dummy_files/python"
+  output_path = "${path.module}/cronjob_lambda_layer_payload.zip"
+  
 }
