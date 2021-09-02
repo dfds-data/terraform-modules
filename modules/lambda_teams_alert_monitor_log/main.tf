@@ -13,7 +13,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
     ignore_changes = [
-      "version"
+      version
     ]
   }
 }
@@ -33,9 +33,9 @@ resource "aws_lambda_function" "lambda_function" {
   memory_size = var.memory_size
   lifecycle {
     ignore_changes = [
-      "last_modified",
-      "qualified_arn",
-      "version"
+      last_modified,
+      qualified_arn,
+      version
     ]
   }
 }
@@ -67,7 +67,7 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
   destination_arn = aws_lambda_function.lambda_function.arn
   lifecycle {
     ignore_changes = [
-      "filter_pattern",
+      filter_pattern,
     ]
   }
 }

@@ -13,7 +13,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
     ignore_changes = [
-      "version"
+      version
     ]
   }
 }
@@ -32,11 +32,11 @@ resource "aws_lambda_function" "lambda_function" {
   memory_size = var.memory_size
   lifecycle {
     ignore_changes = [
-      "last_modified",
-      "qualified_arn",
-      "version",
-      "handler",
-      "environment"
+      last_modified,
+      qualified_arn,
+      version,
+      handler,
+      environment
     ]
   }
 }
@@ -47,7 +47,7 @@ resource "aws_cloudwatch_event_rule" "rate" {
   schedule_expression = var.rate_expression
   lifecycle {
     ignore_changes = [
-      "schedule_expression"
+      schedule_expression
     ]
   }
 }
