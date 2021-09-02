@@ -92,6 +92,6 @@ resource "aws_s3_bucket_object" "function" {
 
 resource "aws_s3_bucket_object" "layer" {
   bucket = var.builds_bucket
-  key    = data "archive_file" "layer"
+  key    = "cronjob_lambda_layer_payload.zip"
   source = data.archive_file.layer.output_path
 }
