@@ -8,8 +8,8 @@ locals {
 }
 
 resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = "aws-data-wrangler-public-artifacts"
-  s3_key              = "releases/2.8.0/awswrangler-layer-2.8.0-py3.8.zip"
+  s3_bucket           = aws_s3_bucket_object.layer.bucket
+  s3_key              = aws_s3_bucket_object.layer.key
   layer_name          = "aws-data-wrangler"
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
@@ -89,4 +89,22 @@ resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
   key    = "cleanup_simple_athena_table_lambda_function_payload.zip"
   source = data.archive_file.function.output_path
+}
+
+resource "aws_s3_bucket_object" "layer" {
+  bucket = var.builds_bucket
+  key    = "cleanup_simple_athena_table_lambda_layer_payload.zip"
+  source = data.archive_file.function.output_path
+}
+
+resource "aws_s3_object_copy" "layer" {
+  bucket = var.builds_bucket
+  key    = "cleanup_simple_athena_table_lambda_layer_payload.zip"
+  source = "aws-data-wrangler-public-artifacts/releases/2.11.0/awswrangler-layer-2.11.0-py3.8.zip"
+
+  grant {
+    uri         = "http://acs.amazonaws.com/groups/global/AllUsers"
+    type        = "Group"
+    permissions = ["READ"]
+  }
 }
