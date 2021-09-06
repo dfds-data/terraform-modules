@@ -4,7 +4,7 @@ variable "entity_name" {
 }
 
 variable "environmentname" {
-  description = "Environmentname, i.e. production, staging, etc."
+  description = "Environment name, i.e. production, staging, etc."
   type        = string
 }
 
