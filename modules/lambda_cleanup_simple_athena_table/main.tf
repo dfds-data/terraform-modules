@@ -1,8 +1,8 @@
 locals {
-  lambda_function_name = format("%s-mntr-%s", var.entity_name, var.environmentname)
-  lambda_layer_name    = format("%s-mntr-%s", var.entity_name, var.environmentname)
-  lambda_role          = format("%s-mntr-%s", var.entity_name, var.environmentname)
-  logfilter_name       = format("%s-mntr-%s", var.entity_name, var.environmentname)
+  lambda_function_name = format("%s-cleanup-%s", var.entity_name, var.environmentname)
+  lambda_layer_name    = format("%s-cleanup-%s", var.entity_name, var.environmentname)
+  lambda_role          = format("%s-cleanup-%s", var.entity_name, var.environmentname)
+  event_rule_name      = format("%s-cleanup-%s", var.entity_name, var.environmentname)
 }
 
 
@@ -18,13 +18,12 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   }
 }
 
-
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
   s3_key        = resource.aws_s3_bucket_object.function.key
   function_name = local.lambda_function_name
   role          = aws_iam_role.instance.arn
-  handler       = "monitor_log.lambda_handler"
+  handler       = var.lambda_handler
   runtime       = var.lambda_runtime
   layers = [
     aws_lambda_layer_version.lambda_layer.arn,
@@ -35,9 +34,28 @@ resource "aws_lambda_function" "lambda_function" {
     ignore_changes = [
       last_modified,
       qualified_arn,
-      version
+      version,
+      handler,
+      environment
     ]
   }
+}
+
+
+resource "aws_cloudwatch_event_rule" "rate" {
+  name                = local.event_rule_name
+  schedule_expression = var.rate_expression
+  lifecycle {
+    ignore_changes = [
+      schedule_expression
+    ]
+  }
+}
+
+resource "aws_cloudwatch_event_target" "target" {
+  rule      = aws_cloudwatch_event_rule.rate.name
+  target_id = local.lambda_function_name
+  arn       = aws_lambda_function.lambda_function.arn
 }
 
 resource "aws_iam_role" "instance" {
@@ -56,21 +74,16 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = local.lambda_function_name
-  principal     = "logs.amazonaws.com"
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.rate.arn
 }
 
 
-resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter" {
-  name            = local.logfilter_name
-  log_group_name  = var.log_group
-  filter_pattern  = var.filterpattern
-  destination_arn = aws_lambda_function.lambda_function.arn
-  lifecycle {
-    ignore_changes = [
-      filter_pattern,
-    ]
-  }
+resource "aws_cloudwatch_log_group" "log_lambda" {
+  name              = "/aws/lambda/${local.lambda_function_name}"
+  retention_in_days = var.cloudwatch_retention_days
 }
+
 resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
   key    = "cleanup_simple_athena_table_lambda_function_payload.zip"

@@ -7,37 +7,37 @@ variable "environmentname" {
   description = "Environmentname, i.e. production, staging, etc."
   type        = string
 }
-variable "log_group" {
-  description = "Name of the log group"
-  type        = string
-}
-
-variable "filterpattern" {
-  description = "Filter pattern"
-  type        = string
-  default     = "ERROR"
-}
 
 variable "builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
 }
 
+variable "rate_expression" {
+  description = "Rate of execution of the lambda function. This should be a rate expression, e.g. rate(15 days) or rate(30 minutes). See more: https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html"
+  type        = string
+  default = "rate(30 days)"
+}
+
+variable "lambda_handler" {
+  description = "Lambda handler"
+  type        = string
+  default = "dummy_function.handler"
+}
 
 variable "role_policies" {
   description = "List of policies attached to role"
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/CloudWatchLogsFullAccess", "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
 }
 
 variable "lambda_runtime" {
   description = "Python runtime"
   type        = string
-  default     = "python3.8"
+  default = "python3.8"
 }
 
 variable "cloudwatch_retention_days" {
-  type    = number
+  type        = number
   default = 14
 }
 

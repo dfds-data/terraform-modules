@@ -1,7 +1,10 @@
 # Introduction
 
-This module spins up the infrastructure for monitoring a cloudwatch log group
-and sending alerts to a Microsoft Teams channel.
+This module spins up the infrastructure for a cronjob on aws lambda. It uses a
+pattern that separates the infrastructure from the code. The build team controls
+the CI/CD pipeline for the code, the execution environment, environment
+variables. Running `terraform apply` after updating the code, layer or
+environment will not revert these updates
 
 # How to use
 
@@ -10,29 +13,24 @@ to set this to an existing pair of environmentname and entity_name, in that case
 terraform will replace the existing resources. Terraform will ask you before
 replacing those resources.
 
-You will need to have created a builds bucket. You can create it with the
-base_infrastructure module, or create it manually.
+You will need to have created a builds bucket. You can create it with the base_infrastructure module, or create it manually. 
 
-You will also need to specify the log group you want to watch by setting the
-`log_group` variable.
-
-The module assumes that the `filterpattern` is "ERROR". You can change that with
-the aws cli or set the `filterpattern` variable when defining the infrastructure
-in terraform. The `filterpattern` variable is ignored in subsequent `terraform apply` commands
-
-The module will generate a dummy lambda layer. You can change that with the aws
-cli.
-
-The lambda function will look for the environment variable `webhook_url`. You can
-set that with the aws cli.
 
 ```
-module "monitor_log" {
-  source                  = "github.com/dfds-data/terraform-modules/modules/lambda_monitor_log"
+module "cronjob" {
+  source                  = "github.com/dfds-data/terraform-modules/modules/lambda_cronjob"
   environmentname         = "dev"
   entity_name             = "metrics"
-  log_group               = module.cronjob.log_group_name
+  role_policies           = ["arn:aws:iam::aws:policy/AmazonS3FullAccess", "arn:aws:iam::aws:policy/AmazonAthenaFullAccess", "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"]
   builds_bucket           = module.base_infrastructure.builds_bucket
 }
 
 ```
+
+The module will generate a dummy lambda layer and a dummy lambda function. You can change these with the aws cli.
+
+aws lambda publish-layer-version
+
+aws lambda update-function-code
+
+aws lambda update-function-configuration
