@@ -9,7 +9,7 @@ locals {
 
 resource "aws_lambda_layer_version" "lambda_layer" {
   s3_bucket           = "aws-data-wrangler-public-artifacts"
-  s3_key              = "releases/2.11.0/awswrangler-layer-2.11.0-py3.8.zip"
+  s3_key              = "releases/2.8.0/awswrangler-layer-2.8.0-py3.8.zip"
   layer_name          = "aws-data-wrangler"
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
