@@ -37,6 +37,7 @@ variable "lambda_runtime" {
 }
 
 variable "cloudwatch_retention_days" {
+  description = "Number of days that cloudwatch will retain logs"
   type    = number
   default = 14
 }

@@ -13,8 +13,7 @@ to set this to an existing pair of environmentname and entity_name, in that case
 terraform will replace the existing resources. Terraform will ask you before
 replacing those resources.
 
-You will need to have created a builds bucket. You can create it with the base_infrastructure module, or create it manually. 
-
+You will need to have created a builds bucket. You can create it with the base_infrastructure module, or create it manually.
 
 ```
 module "cronjob" {
@@ -34,3 +33,7 @@ aws lambda publish-layer-version
 aws lambda update-function-code
 
 aws lambda update-function-configuration
+
+# Variables
+
+There is a list of all variables and a description of these in the [variables.tf ](./variables.tf) file
