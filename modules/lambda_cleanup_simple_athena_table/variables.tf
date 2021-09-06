@@ -27,11 +27,6 @@ variable "lambda_function_payload" {
 
 }
 
-variable "lambda_layer_payload" {
-  description = "Zip file containing the lambda layer"
-  type        = string
-}
-
 variable "lambda_handler" {
   description = "Lambda handler"
   type        = string
