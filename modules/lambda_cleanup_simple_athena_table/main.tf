@@ -1,12 +1,11 @@
 locals {
-  resource_name = format("%s-cron-%s", var.entity_name, var.environmentname)
+  resource_name = format("%s-cleanup-%s", var.entity_name, var.environmentname)
 }
 
-
 resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = var.builds_bucket
-  s3_key              = resource.aws_s3_bucket_object.layer.key
-  layer_name          = local.resource_name
+  s3_bucket           = "arn:aws:s3:::aws-data-wrangler-public-artifacts"
+  s3_key              = "releases/2.11.0/awswrangler-layer-2.11.0-py3.8.zip"
+  layer_name          = "aws-data-wrangler"
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
     ignore_changes = [
@@ -74,7 +73,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.rate.arn
 }
- 
+
 
 resource "aws_cloudwatch_log_group" "log_lambda" {
   name              = "/aws/lambda/${local.resource_name}"
@@ -83,12 +82,6 @@ resource "aws_cloudwatch_log_group" "log_lambda" {
 
 resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
-  key    = "cronjob_lambda_function_payload.zip"
+  key    = "cleanup_simple_athena_table_lambda_function_payload.zip"
   source = data.archive_file.function.output_path
-}
-
-resource "aws_s3_bucket_object" "layer" {
-  bucket = var.builds_bucket
-  key    = "cronjob_lambda_layer_payload.zip"
-  source = data.archive_file.layer.output_path
 }

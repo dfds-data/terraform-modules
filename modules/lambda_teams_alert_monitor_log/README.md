@@ -36,4 +36,7 @@ module "monitor_log" {
 }
 
 ```
- 
+
+# Variables
+
+There is a list of all variables and a description of these in the [variables.tf ](./variables.tf) file

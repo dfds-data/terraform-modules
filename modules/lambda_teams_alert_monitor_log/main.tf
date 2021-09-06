@@ -1,19 +1,17 @@
 locals {
-  lambda_function_name = format("%s-mntr-%s", var.entity_name, var.environmentname)
-  lambda_layer_name    = format("%s-mntr-%s", var.entity_name, var.environmentname)
-  lambda_role          = format("%s-mntr-%s", var.entity_name, var.environmentname)
-  logfilter_name       = format("%s-mntr-%s", var.entity_name, var.environmentname)
+  resource_name = format("%s-mntr-%s", var.entity_name, var.environmentname)
+
 }
 
 
 resource "aws_lambda_layer_version" "lambda_layer" {
   s3_bucket           = var.builds_bucket
   s3_key              = resource.aws_s3_bucket_object.layer.key
-  layer_name          = local.lambda_layer_name
+  layer_name          = local.resource_name
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
     ignore_changes = [
-      "version"
+      version
     ]
   }
 }
@@ -22,7 +20,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
   s3_key        = resource.aws_s3_bucket_object.function.key
-  function_name = local.lambda_function_name
+  function_name = local.resource_name
   role          = aws_iam_role.instance.arn
   handler       = "monitor_log.lambda_handler"
   runtime       = var.lambda_runtime
@@ -33,15 +31,15 @@ resource "aws_lambda_function" "lambda_function" {
   memory_size = var.memory_size
   lifecycle {
     ignore_changes = [
-      "last_modified",
-      "qualified_arn",
-      "version"
+      last_modified,
+      qualified_arn,
+      version
     ]
   }
 }
 
 resource "aws_iam_role" "instance" {
-  name               = local.lambda_role
+  name               = local.resource_name
   assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
 }
 
@@ -55,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = local.lambda_function_name
+  function_name = local.resource_name
   principal     = "logs.amazonaws.com"
 }
 
@@ -67,7 +65,7 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
   destination_arn = aws_lambda_function.lambda_function.arn
   lifecycle {
     ignore_changes = [
-      "filter_pattern",
+      filter_pattern,
     ]
   }
 }
