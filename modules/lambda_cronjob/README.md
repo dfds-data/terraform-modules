@@ -15,7 +15,6 @@ replacing those resources.
 
 You will need to have created a builds bucket. You can create it with the base_infrastructure module, or create it manually. 
 
-The module will generate a dummy lambda layer and a dummy lambda function. You can change these with the aws cli.
 
 ```
 module "cronjob" {
@@ -27,3 +26,11 @@ module "cronjob" {
 }
 
 ```
+
+The module will generate a dummy lambda layer and a dummy lambda function. You can change these with the aws cli.
+
+aws lambda publish-layer-version
+
+aws lambda update-function-code
+
+aws lambda update-function-configuration
