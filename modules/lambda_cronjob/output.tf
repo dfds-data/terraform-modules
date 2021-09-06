@@ -5,7 +5,7 @@ output "lambda_function_arn" {
 
 output "lambda_function_name" {
   description = "ARN of the lambda function"
-  value       = local.resource_name
+  value       = var.name
 }
 output "lambda_layer_arn" {
   description = "ARN of the lambda layer"

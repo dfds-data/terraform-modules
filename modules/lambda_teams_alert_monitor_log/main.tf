@@ -7,7 +7,7 @@ locals {
 resource "aws_lambda_layer_version" "lambda_layer" {
   s3_bucket           = var.builds_bucket
   s3_key              = resource.aws_s3_bucket_object.layer.key
-  layer_name          = local.resource_name
+  layer_name          = var.name
   compatible_runtimes = [var.lambda_runtime]
   lifecycle {
     ignore_changes = [
@@ -20,7 +20,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
   s3_key        = resource.aws_s3_bucket_object.function.key
-  function_name = local.resource_name
+  function_name = var.name
   role          = aws_iam_role.instance.arn
   handler       = "monitor_log.lambda_handler"
   runtime       = var.lambda_runtime
@@ -39,7 +39,7 @@ resource "aws_lambda_function" "lambda_function" {
 }
 
 resource "aws_iam_role" "instance" {
-  name               = local.resource_name
+  name               = var.name
   assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
 }
 
@@ -53,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = local.resource_name
+  function_name = var.name
   principal     = "logs.amazonaws.com"
 }
 
