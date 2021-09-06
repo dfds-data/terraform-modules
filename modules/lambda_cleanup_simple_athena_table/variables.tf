@@ -3,33 +3,16 @@ variable "entity_name" {
   type        = string
 }
 
-variable "environmentname" {
-  description = "Environmentname, i.e. production, staging, etc."
-  type        = string
-}
-
 variable "rate_expression" {
   description = "Rate of execution of the lambda function. This should be a rate expression, e.g. rate(15 days) or rate(30 minutes). See more: https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html"
   type        = string
+  default = "rate(30 days)"
 }
-
-variable "ddp_endpoint" {
-  description = "URL of the ddp endpoint"
-  type        = string
-  default     = "none"
-}
-
 
 variable "builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
 }
-
-variable "output_bucket" {
-  description = "Name s3 bucket for the lambda builds"
-  type        = string
-}
-
 
 variable "runtime" {
   description = "Python runtime"
@@ -47,7 +30,6 @@ variable "lambda_function_payload" {
 variable "lambda_layer_payload" {
   description = "Zip file containing the lambda layer"
   type        = string
-  default = "rate(30 days)"
 }
 
 variable "lambda_handler" {

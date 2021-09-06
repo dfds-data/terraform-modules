@@ -1,3 +1,12 @@
+resource "random_string" "random" {
+  length           = 5
+  special          = false
+}
+
+locals {
+  resource_name = format("%s-clean-%s", var.entity_name, random_string.random.result)
+}
+
 resource "aws_lambda_layer_version" "lambda_layer" {
   s3_bucket           = "arn:aws:s3:::aws-data-wrangler-public-artifacts"
   s3_key              = "releases/2.11.0/awswrangler-layer-2.11.0-py3.8.zip"
@@ -13,7 +22,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
   s3_key        = resource.aws_s3_bucket_object.function.key
-  function_name = var.name
+  function_name = local.resource_name
   role          = aws_iam_role.instance.arn
   handler       = var.lambda_handler
   runtime       = var.lambda_runtime
@@ -35,7 +44,7 @@ resource "aws_lambda_function" "lambda_function" {
 
 
 resource "aws_cloudwatch_event_rule" "rate" {
-  name                = var.name
+  name                = local.resource_name
   schedule_expression = var.rate_expression
   lifecycle {
     ignore_changes = [
@@ -46,12 +55,12 @@ resource "aws_cloudwatch_event_rule" "rate" {
 
 resource "aws_cloudwatch_event_target" "target" {
   rule      = aws_cloudwatch_event_rule.rate.name
-  target_id = var.name
+  target_id = local.resource_name
   arn       = aws_lambda_function.lambda_function.arn
 }
 
 resource "aws_iam_role" "instance" {
-  name               = var.name
+  name               = local.resource_name
   assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
 }
 
@@ -65,14 +74,14 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = var.name
+  function_name = local.resource_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.rate.arn
 }
 
 
 resource "aws_cloudwatch_log_group" "log_lambda" {
-  name              = "/aws/lambda/${var.name}"
+  name              = "/aws/lambda/${local.resource_name}"
   retention_in_days = var.cloudwatch_retention_days
 }
 
