@@ -63,7 +63,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
 
 
 resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter" {
-  name            = local.logfilter_name
+  name            = local.resource_name
   log_group_name  = var.log_group
   filter_pattern  = var.filterpattern
   destination_arn = aws_lambda_function.lambda_function.arn
