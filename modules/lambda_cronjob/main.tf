@@ -24,7 +24,9 @@ resource "aws_lambda_function" "lambda_function" {
       qualified_arn,
       version,
       handler,
-      environment
+      environment,
+      layers
+    ]
     ]
   }
 }

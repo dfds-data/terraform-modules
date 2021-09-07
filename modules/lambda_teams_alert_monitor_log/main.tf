@@ -22,7 +22,9 @@ resource "aws_lambda_function" "lambda_function" {
     ignore_changes = [
       last_modified,
       qualified_arn,
-      version
+      version,
+      layers
+    ]
     ]
   }
 }
