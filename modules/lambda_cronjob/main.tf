@@ -6,7 +6,7 @@ resource "random_string" "random" {
 }
 
 locals {
-  resource_name = format("%s-cron-%s", var.entity_name, random_string.random.result)
+  resource_name = format("%s-%s", var.entity_name, random_string.random.result)
 }
 
 resource "aws_lambda_function" "lambda_function" {
