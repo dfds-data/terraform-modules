@@ -1,11 +1,14 @@
 resource "random_string" "random" {
-  length           = 5
-  special          = false
+  length  = 5
+  special = false
+  lower   = true
+  upper   = false
 }
 
 locals {
   resource_name = format("%s-clean-%s", var.entity_name, random_string.random.result)
 }
+
 
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
