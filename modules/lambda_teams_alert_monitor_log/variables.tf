@@ -3,10 +3,6 @@ variable "entity_name" {
   type        = string
 }
 
-variable "environmentname" {
-  description = "Environmentname, i.e. production, staging, etc."
-  type        = string
-}
 variable "log_group" {
   description = "Name of the log group"
   type        = string

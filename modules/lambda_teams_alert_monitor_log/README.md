@@ -29,7 +29,6 @@ set that with the aws cli.
 ```
 module "monitor_log" {
   source                  = "github.com/dfds-data/terraform-modules/modules/lambda_monitor_log"
-  environmentname         = "dev"
   entity_name             = "metrics"
   log_group               = module.cronjob.log_group_name
   builds_bucket           = module.base_infrastructure.builds_bucket

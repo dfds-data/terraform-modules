@@ -7,10 +7,6 @@ output "lambda_function_name" {
   description = "ARN of the lambda function"
   value       = local.resource_name
 }
-output "lambda_layer_arn" {
-  description = "ARN of the lambda layer"
-  value       = aws_lambda_layer_version.lambda_layer.arn
-}
 
 output "iam_role_name" {
   description = "Name of the IAM role"

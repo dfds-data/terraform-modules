@@ -1,6 +1,14 @@
 # Introduction
 
-This repository contains terraform modules to deploy infrastructure on AWS. You
-can read about how to use the modules in README.md files inside the individual
-modules.
- 
+
+# Example 1
+Start by spinning up the base_infrastructure. The datapump expects
+
+# Example 2
+To use the datapump module in your infrastructure code import it by writing the following:
+
+```tf
+module "datapump" {
+  source                  = "github.com/dfds-data/terraform-modules/modules/datapump"
+  ...
+```

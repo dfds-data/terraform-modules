@@ -1,18 +1,12 @@
-locals {
-  resource_name = format("%s-cron-%s", var.entity_name, var.environmentname)
+resource "random_string" "random" {
+  length  = 5
+  special = false
+  lower   = true
+  upper   = false
 }
 
-
-resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = var.builds_bucket
-  s3_key              = resource.aws_s3_bucket_object.layer.key
-  layer_name          = local.resource_name
-  compatible_runtimes = [var.lambda_runtime]
-  lifecycle {
-    ignore_changes = [
-      version
-    ]
-  }
+locals {
+  resource_name = format("%s-cron-%s", var.entity_name, random_string.random.result)
 }
 
 resource "aws_lambda_function" "lambda_function" {
@@ -22,9 +16,6 @@ resource "aws_lambda_function" "lambda_function" {
   role          = aws_iam_role.instance.arn
   handler       = var.lambda_handler
   runtime       = var.lambda_runtime
-  layers = [
-    aws_lambda_layer_version.lambda_layer.arn,
-  ]
   timeout     = var.timeout
   memory_size = var.memory_size
   lifecycle {
@@ -33,7 +24,8 @@ resource "aws_lambda_function" "lambda_function" {
       qualified_arn,
       version,
       handler,
-      environment
+      environment,
+      layers
     ]
   }
 }
@@ -85,10 +77,4 @@ resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
   key    = "cronjob_lambda_function_payload.zip"
   source = data.archive_file.function.output_path
-}
-
-resource "aws_s3_bucket_object" "layer" {
-  bucket = var.builds_bucket
-  key    = "cronjob_lambda_layer_payload.zip"
-  source = data.archive_file.layer.output_path
 }

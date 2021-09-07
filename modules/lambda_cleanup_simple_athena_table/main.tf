@@ -1,18 +1,14 @@
-locals {
-  resource_name = format("%s-cleanup-%s", var.entity_name, var.environmentname)
+resource "random_string" "random" {
+  length  = 5
+  special = false
+  lower   = true
+  upper   = false
 }
 
-resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = "arn:aws:s3:::aws-data-wrangler-public-artifacts"
-  s3_key              = "releases/2.11.0/awswrangler-layer-2.11.0-py3.8.zip"
-  layer_name          = "aws-data-wrangler"
-  compatible_runtimes = [var.lambda_runtime]
-  lifecycle {
-    ignore_changes = [
-      version
-    ]
-  }
+locals {
+  resource_name = format("%s-clean-%s", var.entity_name, random_string.random.result)
 }
+
 
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
@@ -21,9 +17,6 @@ resource "aws_lambda_function" "lambda_function" {
   role          = aws_iam_role.instance.arn
   handler       = var.lambda_handler
   runtime       = var.lambda_runtime
-  layers = [
-    aws_lambda_layer_version.lambda_layer.arn,
-  ]
   timeout     = var.timeout
   memory_size = var.memory_size
   lifecycle {
@@ -32,7 +25,8 @@ resource "aws_lambda_function" "lambda_function" {
       qualified_arn,
       version,
       handler,
-      environment
+      environment,
+      layers
     ]
   }
 }

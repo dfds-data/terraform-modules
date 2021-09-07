@@ -3,9 +3,10 @@ variable "entity_name" {
   type        = string
 }
 
-variable "environmentname" {
-  description = "Environmentname, i.e. production, staging, etc."
+variable "rate_expression" {
+  description = "Rate of execution of the lambda function. This should be a rate expression, e.g. rate(15 days) or rate(30 minutes). See more: https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html"
   type        = string
+  default = "rate(30 days)"
 }
 
 variable "builds_bucket" {
@@ -13,10 +14,17 @@ variable "builds_bucket" {
   type        = string
 }
 
-variable "rate_expression" {
-  description = "Rate of execution of the lambda function. This should be a rate expression, e.g. rate(15 days) or rate(30 minutes). See more: https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html"
+variable "runtime" {
+  description = "Python runtime"
   type        = string
-  default = "rate(30 days)"
+  default = "python3.8"
+}
+
+variable "lambda_function_payload" {
+  description = "Zip file containing the lambda function"
+  type        = string
+  default     = "lambda_function_payload.zip"
+
 }
 
 variable "lambda_handler" {

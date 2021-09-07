@@ -3,11 +3,6 @@ variable "entity_name" {
   type        = string
 }
 
-variable "environmentname" {
-  description = "Environment name, i.e. production, staging, etc."
-  type        = string
-}
-
 variable "builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
