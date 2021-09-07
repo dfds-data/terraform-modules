@@ -7,7 +7,7 @@ variable "builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
 }
-
+ 
 variable "rate_expression" {
   description = "Rate of execution of the lambda function. This should be a rate expression, e.g. rate(15 days) or rate(30 minutes). See more: https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html"
   type        = string
