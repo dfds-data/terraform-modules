@@ -7,18 +7,6 @@ locals {
   resource_name = format("%s-clean-%s", var.entity_name, random_string.random.result)
 }
 
-resource "aws_lambda_layer_version" "lambda_layer" {
-  s3_bucket           = aws_s3_bucket_object.layer.bucket
-  s3_key              = aws_s3_bucket_object.layer.key
-  layer_name          = "aws-data-wrangler"
-  compatible_runtimes = [var.lambda_runtime]
-  lifecycle {
-    ignore_changes = [
-      version
-    ]
-  }
-}
-
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
   s3_key        = resource.aws_s3_bucket_object.function.key
