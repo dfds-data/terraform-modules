@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
   for_each   = toset(var.role_policies)
   role       = aws_iam_role.instance.name
   policy_arn = each.value
-  ifecycle {
+  lifecycle {
     ignore_changes = [
       policy_arn
     ]
