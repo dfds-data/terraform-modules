@@ -25,7 +25,9 @@ resource "aws_lambda_function" "lambda_function" {
       version,
       handler,
       environment,
-      layers
+      layers,
+      timeout,
+      memory_size
     ]
   }
 }
