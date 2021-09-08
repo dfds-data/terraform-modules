@@ -23,7 +23,9 @@ resource "aws_lambda_function" "lambda_function" {
       last_modified,
       qualified_arn,
       version,
-      layers
+      layers,
+      timeout,
+      memory_size
     ]
   }
 }
