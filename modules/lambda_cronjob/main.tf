@@ -66,7 +66,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.rate.arn
 }
-
+ 
 
 resource "aws_cloudwatch_log_group" "log_lambda" {
   name              = "/aws/lambda/${local.resource_name}"
