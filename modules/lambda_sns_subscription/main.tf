@@ -109,7 +109,19 @@ resource "aws_sqs_queue_policy" "subscription" {
           "aws:SourceArn": "${var.sns_topic_arn}"
         }
       }
-    }
+    },
+    {
+      "Action": [
+          "sqs:ReceiveMessage",
+      ],
+      "Resource": [
+        "${aws_sqs_queue.sqs.arn}"
+      ],
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      }
+  }
   ]
 }
 EOF
