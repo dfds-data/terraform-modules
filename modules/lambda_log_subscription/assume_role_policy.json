@@ -7,6 +7,17 @@
         "Service": "lambda.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
-    }
+    },
+    {
+      "Action" : [
+          "sns:Publish",
+          "sns:Subscribe"
+      ],
+      "Effect" : "Allow",
+      "Resource" : [
+          { "Ref" : "arn:aws:sns:eu-central-1:469457075771:dev-preprocess-jlcid" }
+      ]
+  }
   ]
 }
+ 
