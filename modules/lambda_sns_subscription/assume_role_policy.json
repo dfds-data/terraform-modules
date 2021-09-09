@@ -9,12 +9,13 @@
       "Action": "sts:AssumeRole"
     },
     {
-      "Sid": "",
-      "Effect": "Allow",
       "Action": [
-          "sqs:*"
+          "sqs:DeleteMessage",
+          "sqs:ReceiveMessage",
+          "sqs:GetQueueAttributes"
       ],
-      "Resource": "*"
+      "Resource": ["arn:aws:sqs:eu-central-1:469457075771:dev-store_before_preprocess_history", "arn:aws:sqs:eu-central-1:469457075771:dev-store_preprocess_history", "arn:aws:sqs:eu-central-1:469457075771:dev-predict", "arn:aws:sqs:eu-central-1:469457075771:dev-store_predict_history"],
+      "Effect": "Allow"
   }
   ]
 }
