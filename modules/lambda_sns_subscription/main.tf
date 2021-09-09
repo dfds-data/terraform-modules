@@ -1,0 +1,120 @@
+resource "random_string" "random" {
+  length  = 5
+  special = false
+  lower   = true
+  upper   = false
+}
+
+locals {
+  resource_name = format("%s-%s", var.entity_name, random_string.random.result)
+}
+
+resource "aws_lambda_function" "lambda_function" {
+  s3_bucket     = var.builds_bucket
+  s3_key        = resource.aws_s3_bucket_object.function.key
+  function_name = local.resource_name
+  role          = aws_iam_role.instance.arn
+  handler       = var.lambda_handler
+  runtime       = var.lambda_runtime
+  timeout     = var.timeout
+  memory_size = var.memory_size
+  lifecycle {
+    ignore_changes = [
+      last_modified,
+      qualified_arn,
+      version,
+      handler,
+      environment,
+      layers,
+      timeout,
+      memory_size
+    ]
+  }
+}
+
+resource "aws_iam_role" "instance" {
+  name               = local.resource_name
+  assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
+  lifecycle {
+    ignore_changes = [
+      assume_role_policy
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
+  for_each   = toset(var.role_policies)
+  role       = aws_iam_role.instance.name
+  policy_arn = each.value
+  lifecycle {
+    ignore_changes = [
+      policy_arn
+    ]
+  }
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = local.resource_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.rate.arn
+}
+
+resource "aws_s3_bucket_object" "function" {
+  bucket = var.builds_bucket
+  key    = "dummy_lambda_function_payload.zip"
+  source = data.archive_file.function.output_path
+}
+
+resource "aws_sqs_queue" "sqs" {
+  name  = local.resource_name
+}
+
+resource "aws_sns_topic_subscription" "subscription" {
+  protocol             = "sqs"
+  raw_message_delivery = true
+  topic_arn            = var.sns_topic_arn
+  endpoint             = aws_sqs_queue.sqs.arn
+}
+
+resource "aws_lambda_event_source_mapping" "example" {
+  event_source_arn = aws_sqs_queue.sqs_queue_test.arn
+  function_name    = aws_lambda_function.lambda_function.arn
+}
+
+resource "aws_lambda_permission" "allows_sqs_to_trigger_lambda" {
+  statement_id  = "AllowExecutionFromSQS"
+  action        = "lambda:InvokeFunction"
+  function_name = local.resource_name
+  principal     = "sqs.amazonaws.com"
+  source_arn    = aws_sqs_queue.sqs.arn
+}
+
+resource "aws_sqs_queue_policy" "subscription" {
+  queue_url = aws_sqs_queue.sqs.id
+  policy    = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "sns.amazonaws.com"
+      },
+      "Action": [
+        "sqs:SendMessage"
+      ],
+      "Resource": [
+        "${aws_sqs_queue.sqs.arn}"
+      ],
+      "Condition": {
+        "ArnEquals": {
+          "aws:SourceArn": "${var.sns_topic_arn}"
+        }
+      }
+    }
+  ]
+}
+EOF
+}
