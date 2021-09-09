@@ -77,6 +77,11 @@ resource "aws_lambda_permission" "allows_sqs_to_trigger_lambda" {
   source_arn    = aws_sqs_queue.sqs.arn
 }
 
+resource "aws_cloudwatch_log_group" "log_lambda" {
+  name              = "/aws/lambda/${local.resource_name}"
+  retention_in_days = var.cloudwatch_retention_days
+}
+
 resource "aws_sqs_queue_policy" "subscription" {
   queue_url = aws_sqs_queue.sqs.id
   policy    = <<EOF

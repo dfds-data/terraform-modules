@@ -12,3 +12,8 @@ output "resource_name" {
   description = "Resource name"
   value       = local.resource_name
 }
+
+output "log_group_name" {
+  description = "Name of the AWS Cloudwatch log group"
+  value       = aws_cloudwatch_log_group.log_lambda.name
+}

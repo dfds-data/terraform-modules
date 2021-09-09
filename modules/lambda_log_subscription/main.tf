@@ -72,6 +72,12 @@ resource "aws_cloudwatch_log_subscription_filter" "test_lambdafunction_logfilter
     ]
   }
 }
+
+resource "aws_cloudwatch_log_group" "log_lambda" {
+  name              = "/aws/lambda/${local.resource_name}"
+  retention_in_days = var.cloudwatch_retention_days
+}
+
 resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
   key    = "monitor_log_lambda_function_payload.zip"
