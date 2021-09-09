@@ -11,8 +11,3 @@ output "iam_role_name" {
   description = "Name of the IAM role"
   value       = aws_iam_role.instance.name
 }
-
-output "log_group_name" {
-  description = "Name of the AWS Cloudwatch log group"
-  value       = aws_cloudwatch_log_group.log_lambda.name
-}
