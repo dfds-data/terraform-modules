@@ -71,9 +71,12 @@ resource "aws_sns_topic_subscription" "subscription" {
   endpoint             = aws_sqs_queue.sqs.arn
 }
 
-resource "aws_lambda_event_source_mapping" "example" {
+
+resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   event_source_arn = aws_sqs_queue.sqs.arn
+  enabled          = true
   function_name    = aws_lambda_function.lambda_function.arn
+  batch_size       = 1
 }
 
 resource "aws_lambda_permission" "allows_sqs_to_trigger_lambda" {
