@@ -21,7 +21,7 @@ variable "lambda_handler" {
 variable "role_policies" {
   description = "List of policies attached to role"
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
+  default     = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole", "arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole"]
 }
 
 variable "lambda_runtime" {
