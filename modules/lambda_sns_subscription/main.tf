@@ -121,7 +121,6 @@ resource "aws_sqs_queue_policy" "subscription" {
       "Principal": {
         "Service": "lambda.amazonaws.com"
       }
-  }
   ]
 }
 EOF
