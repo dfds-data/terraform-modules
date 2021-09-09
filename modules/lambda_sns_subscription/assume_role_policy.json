@@ -7,7 +7,15 @@
         "Service": "lambda.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
-    }
+    },
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Action": [
+          "sqs:*"
+      ],
+      "Resource": "*"
+  }
   ]
 }
  
