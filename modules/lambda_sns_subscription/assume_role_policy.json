@@ -14,7 +14,7 @@
           "sqs:ReceiveMessage",
           "sqs:GetQueueAttributes"
       ],
-      "Resource": ["arn:aws:sqs:eu-central-1:469457075771:dev-store_before_preprocess_history", "arn:aws:sqs:eu-central-1:469457075771:dev-store_preprocess_history", "arn:aws:sqs:eu-central-1:469457075771:dev-predict", "arn:aws:sqs:eu-central-1:469457075771:dev-store_predict_history"],
+      "Resource": ["arn:aws:sqs:eu-central-1:469457075771:dev-predict-tuu1o", "arn:aws:sqs:eu-central-1:469457075771:dev-store_preprocess_history-uqin1", "arn:aws:sqs:eu-central-1:469457075771:dev-store_predict_history-35h76", "arn:aws:sqs:eu-central-1:469457075771:dev-store_before_preprocess_history-rr4iw"],
       "Effect": "Allow"
   }
   ]
