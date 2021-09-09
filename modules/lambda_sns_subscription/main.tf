@@ -53,13 +53,6 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
   }
 }
 
-resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
-  statement_id  = "AllowExecutionFromCloudWatch"
-  action        = "lambda:InvokeFunction"
-  function_name = local.resource_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.rate.arn
-}
 
 resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
@@ -79,7 +72,7 @@ resource "aws_sns_topic_subscription" "subscription" {
 }
 
 resource "aws_lambda_event_source_mapping" "example" {
-  event_source_arn = aws_sqs_queue.sqs_queue_test.arn
+  event_source_arn = aws_sqs_queue.sqs.arn
   function_name    = aws_lambda_function.lambda_function.arn
 }
 
