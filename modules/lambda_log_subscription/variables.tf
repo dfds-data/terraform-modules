@@ -63,7 +63,7 @@ variable "lambda_function_payload_key" {
 }
 
 variable "environment_variables" {
-  type = "map"
+  type = map(string)
   default = null
 }
 
