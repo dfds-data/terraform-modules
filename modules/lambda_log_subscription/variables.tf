@@ -50,3 +50,26 @@ variable "timeout" {
   default     = 12
 }
  
+variable "layers" {
+  type = list(string)
+  default = null
+}
+
+
+variable "lambda_function_payload_key" {
+  description = "Lambda function payload key"
+  type        = string
+  default     = "log_subscription_dummy_function_payload.zip"
+}
+
+variable "environment_variables" {
+  type = "map"
+  default = null
+}
+
+variable "lambda_handler" {
+  description = "Lambda handler"
+  type        = string
+  default     = "monitor_log.lambda_handler"
+}
+

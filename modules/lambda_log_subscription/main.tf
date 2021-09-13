@@ -11,13 +11,17 @@ locals {
 
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
-  s3_key        = resource.aws_s3_bucket_object.function.key
+  s3_key        = var.lambda_function_payload_key
   function_name = local.resource_name
   role          = aws_iam_role.instance.arn
-  handler       = "monitor_log.lambda_handler"
+  handler       = var.lambda_handler
   runtime       = var.lambda_runtime
   timeout     = var.timeout
   memory_size = var.memory_size
+  layers = var.layers
+  environment {
+    variables = var.environment_variables
+  }
   lifecycle {
     ignore_changes = [
       last_modified,
@@ -80,6 +84,6 @@ resource "aws_cloudwatch_log_group" "log_lambda" {
 
 resource "aws_s3_bucket_object" "function" {
   bucket = var.builds_bucket
-  key    = "monitor_log_lambda_function_payload.zip"
+  key    = "log_subscription_dummy_function_payload.zip"
   source = data.archive_file.function.output_path
 }
