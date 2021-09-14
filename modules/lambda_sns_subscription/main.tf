@@ -62,6 +62,7 @@ resource "aws_s3_bucket_object" "function" {
 
 resource "aws_sqs_queue" "sqs" {
   name  = local.resource_name
+  visibility_timeout_seconds = var.visibility_timeout_seconds
 }
 
 resource "aws_sns_topic_subscription" "subscription" {

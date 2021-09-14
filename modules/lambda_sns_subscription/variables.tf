@@ -48,3 +48,7 @@ variable "timeout" {
   default     = 12
 }
 
+variable "visibility_timeout_seconds" {
+  type = number
+  default = 720
+}
