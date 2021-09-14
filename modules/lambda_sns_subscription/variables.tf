@@ -55,5 +55,5 @@ variable "visibility_timeout_seconds" {
 
 variable "maximum_retry_attempts" {
   type = number
-  default = 0
+  default = 1
 }
