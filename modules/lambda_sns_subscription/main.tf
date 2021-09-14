@@ -78,7 +78,6 @@ resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   enabled          = true
   function_name    = aws_lambda_function.lambda_function.arn
   batch_size       = 1
-  maximum_retry_attempts = var.maximum_retry_attempts
 }
 
 resource "aws_lambda_permission" "allows_sqs_to_trigger_lambda" {
