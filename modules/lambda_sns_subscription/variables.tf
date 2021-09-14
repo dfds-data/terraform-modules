@@ -52,3 +52,14 @@ variable "visibility_timeout_seconds" {
   type = number
   default = 720
 }
+
+variable "message_retention_seconds" {
+  type = number
+  default = 60
+}
+
+variable "delay_seconds" {
+  type = number
+  default = 10
+  
+}
