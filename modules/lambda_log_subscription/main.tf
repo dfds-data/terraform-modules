@@ -24,6 +24,8 @@ resource "aws_lambda_function" "lambda_function" {
   }
   lifecycle {
     ignore_changes = [
+      s3_key,
+      s3_bucket,
       last_modified,
       qualified_arn,
       version,
