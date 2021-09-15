@@ -11,7 +11,7 @@ locals {
 
 resource "aws_lambda_function" "lambda_function" {
   s3_bucket     = var.builds_bucket
-  s3_key        = resource.aws_s3_bucket_object.function.key
+  s3_key        = var.lambda_function_payload_key
   function_name = local.resource_name
   role          = aws_iam_role.instance.arn
   handler       = var.lambda_handler
