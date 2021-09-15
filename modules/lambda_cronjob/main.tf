@@ -18,6 +18,10 @@ resource "aws_lambda_function" "lambda_function" {
   runtime       = var.lambda_runtime
   timeout     = var.timeout
   memory_size = var.memory_size
+  layers = var.layers
+  environment {
+    variables = var.environment_variables
+  }
   lifecycle {
     ignore_changes = [
       last_modified,

@@ -49,3 +49,20 @@ variable "timeout" {
   type        = number
   default     = 12
 }
+
+variable "layers" {
+  type = list(string)
+  default = null
+}
+
+
+variable "lambda_function_payload_key" {
+  description = "Lambda function payload key"
+  type        = string
+  default     = "cronjob_lambda_dummy_function_payload.zip"
+}
+
+variable "environment_variables" {
+  type = map(string)
+  default = null
+}
