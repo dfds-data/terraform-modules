@@ -63,3 +63,20 @@ variable "delay_seconds" {
   default = 10
   
 }
+
+variable "layers" {
+  type = list(string)
+  default = null
+}
+
+
+variable "lambda_function_payload_key" {
+  description = "Lambda function payload key"
+  type        = string
+  default     = "sns_subscription_lambda_dummy_function_payload.zip"
+}
+
+variable "environment_variables" {
+  type = map(string)
+  default = null
+}
