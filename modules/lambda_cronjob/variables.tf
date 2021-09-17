@@ -73,3 +73,9 @@ variable "environment_variables" {
   type = map(string)
   default = null
 }
+
+variable "package_type" {
+  type = string
+  default = "Zip"
+  
+}

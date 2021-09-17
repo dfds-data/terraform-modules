@@ -80,3 +80,8 @@ variable "lambda_handler" {
   default     = "monitor_log.lambda_handler"
 }
 
+variable "package_type" {
+  type = string
+  default = "Zip"
+  
+}
