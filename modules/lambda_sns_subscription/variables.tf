@@ -10,6 +10,7 @@ variable sns_topic_arn {
 variable "builds_bucket" {
   description = "Name s3 bucket for the lambda builds"
   type        = string
+  default = null
 }
 
 variable "lambda_handler" {
@@ -73,7 +74,13 @@ variable "layers" {
 variable "lambda_function_payload_key" {
   description = "Lambda function payload key"
   type        = string
-  default     = "sns_subscription_lambda_dummy_function_payload.zip"
+  default     = null
+}
+
+variable "image_uri" {
+  description = "Lambda function image uri"
+  type        = string
+  default     = null
 }
 
 variable "environment_variables" {

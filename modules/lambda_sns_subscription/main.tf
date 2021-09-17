@@ -60,12 +60,6 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
 }
 
 
-resource "aws_s3_bucket_object" "function" {
-  bucket = var.builds_bucket
-  key    = "dummy_lambda_function_payload.zip"
-  source = data.archive_file.function.output_path
-}
-
 resource "aws_sqs_queue" "sqs" {
   name  = local.resource_name
   visibility_timeout_seconds = var.visibility_timeout_seconds

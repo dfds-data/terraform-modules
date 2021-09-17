@@ -8,9 +8,3 @@ data "aws_iam_policy_document" "instance-assume-role-policy" {
     }
   }
 } 
-
-data "archive_file" "function" {
-  type        = "zip"
-  source_file = "${path.module}/../python_files/dummy_function.py"
-  output_path = "${path.module}/sns_subscription_lambda_dummy_function_payload.zip"
-}
