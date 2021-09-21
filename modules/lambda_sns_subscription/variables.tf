@@ -28,7 +28,7 @@ variable "role_policies" {
 variable "lambda_runtime" {
   description = "Python runtime"
   type        = string
-  default = "python3.8"
+  default = null
 }
 
 variable "cloudwatch_retention_days" {
