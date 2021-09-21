@@ -16,7 +16,7 @@ variable "builds_bucket" {
 variable "lambda_handler" {
   description = "Lambda handler"
   type        = string
-  default = "dummy_function.handler"
+  default     = null
 }
 
 variable "role_policies" {
