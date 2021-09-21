@@ -16,7 +16,7 @@ variable "builds_bucket" {
 variable "lambda_handler" {
   description = "Lambda handler"
   type        = string
-  default     = null
+  default = "dummy_function.handler"
 }
 
 variable "role_policies" {
@@ -28,7 +28,7 @@ variable "role_policies" {
 variable "lambda_runtime" {
   description = "Python runtime"
   type        = string
-  default = null
+  default = "python3.8"
 }
 
 variable "cloudwatch_retention_days" {
