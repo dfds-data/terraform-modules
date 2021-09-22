@@ -71,7 +71,7 @@ variable "image_uri" {
 
 variable "environment_variables" {
   type = map(string)
-  default = {}
+  default = {dummy_var = "dummy_var"}
 }
 
 variable "package_type" {
