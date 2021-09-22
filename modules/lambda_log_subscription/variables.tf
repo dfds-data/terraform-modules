@@ -71,7 +71,7 @@ variable "image_uri" {
 
 variable "environment_variables" {
   type = map(string)
-  default = null
+  default = {}
 }
 
 variable "lambda_handler" {
