@@ -92,3 +92,9 @@ resource "aws_cloudwatch_log_group" "log_lambda" {
   name              = "/aws/lambda/${local.resource_name}"
   retention_in_days = var.cloudwatch_retention_days
 }
+
+resource "aws_s3_bucket_object" "function" {
+  bucket = var.builds_bucket
+  key    = "lambda_dummy_function_payload.zip"
+  source = data.archive_file.function.output_path
+}
