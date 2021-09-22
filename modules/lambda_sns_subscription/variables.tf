@@ -74,7 +74,7 @@ variable "layers" {
 variable "lambda_function_payload_key" {
   description = "Lambda function payload key"
   type        = string
-  default     = null
+  default     = "lambda_dummy_function_payload.zip"
 }
 
 variable "image_uri" {
