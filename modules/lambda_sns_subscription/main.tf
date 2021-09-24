@@ -124,3 +124,7 @@ resource "aws_sqs_queue_policy" "subscription" {
 }
 EOF
 }
+
+resource "aws_sns_topic" "topic" {
+  name = local.resource_name
+}

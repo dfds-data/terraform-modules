@@ -98,3 +98,7 @@ resource "aws_s3_bucket_object" "function" {
   key    = "lambda_dummy_function_payload.zip"
   source = data.archive_file.function.output_path
 }
+
+resource "aws_sns_topic" "topic" {
+  name = local.resource_name
+}
