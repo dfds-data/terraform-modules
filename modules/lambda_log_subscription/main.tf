@@ -1,12 +1,12 @@
-resource "random_string" "random" {
-  length  = 5
-  special = false
-  lower   = true
-  upper   = false
-}
+# resource "random_string" "random" {
+#   length  = 5
+#   special = false
+#   lower   = true
+#   upper   = false
+# }
 
 locals {
-  resource_name = format("%s-%s", var.entity_name, random_string.random.result)
+  resource_name = format("%s", var.entity_name)
 }
 
 resource "aws_lambda_function" "lambda_function" {
