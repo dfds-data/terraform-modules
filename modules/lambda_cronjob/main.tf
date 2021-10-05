@@ -40,23 +40,6 @@ resource "aws_lambda_function" "lambda_function" {
   }
 }
 
-
-resource "aws_cloudwatch_event_rule" "rate" {
-  name                = local.resource_name
-  schedule_expression = var.rate_expression
-  lifecycle {
-    ignore_changes = [
-      schedule_expression
-    ]
-  }
-}
-
-resource "aws_cloudwatch_event_target" "target" {
-  rule      = aws_cloudwatch_event_rule.rate.name
-  target_id = local.resource_name
-  arn       = aws_lambda_function.lambda_function.arn
-}
-
 resource "aws_iam_role" "instance" {
   name               = local.resource_name
   assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
@@ -78,27 +61,6 @@ resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
   }
 }
 
-
-resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
-  statement_id  = "AllowExecutionFromCloudWatch"
-  action        = "lambda:InvokeFunction"
-  function_name = local.resource_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.rate.arn
-}
- 
-
-resource "aws_cloudwatch_log_group" "log_lambda" {
-  name              = "/aws/lambda/${local.resource_name}"
-  retention_in_days = var.cloudwatch_retention_days
-}
-
-resource "aws_s3_bucket_object" "function" {
-  bucket = var.builds_bucket
-  key    = "lambda_dummy_function_payload.zip"
-  source = data.archive_file.function.output_path
-}
-
 resource "aws_sns_topic" "topic" {
   name = local.resource_name
 }
@@ -117,3 +79,40 @@ module "monitor" {
       webhook_url = "https://dfds.webhook.office.com/webhookb2/099086f9-7359-4d9c-a0f1-d6e48882f42a@73a99466-ad05-4221-9f90-e7142aa2f6c1/IncomingWebhook/bd7eb83cd19440b8b2928ccaecb9d5f2/d7bb3513-a242-4d53-9959-807f4ececf3a"
     }
 }
+
+resource "aws_cloudwatch_log_group" "log_lambda" {
+  name              = "/aws/lambda/${local.resource_name}"
+  retention_in_days = var.cloudwatch_retention_days
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = local.resource_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.rate.arn
+}
+
+resource "aws_s3_bucket_object" "function" {
+  bucket = var.builds_bucket
+  key    = "lambda_dummy_function_payload.zip"
+  source = data.archive_file.function.output_path
+}
+
+resource "aws_cloudwatch_event_rule" "rate" {
+  name                = local.resource_name
+  schedule_expression = var.rate_expression
+  lifecycle {
+    ignore_changes = [
+      schedule_expression
+    ]
+  }
+}
+
+resource "aws_cloudwatch_event_target" "target" {
+  rule      = aws_cloudwatch_event_rule.rate.name
+  target_id = local.resource_name
+  arn       = aws_lambda_function.lambda_function.arn
+}
+
+

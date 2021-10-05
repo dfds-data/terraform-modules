@@ -3,25 +3,6 @@ variable "entity_name" {
   type        = string
 }
 
-variable "builds_bucket" {
-  description = "Name s3 bucket for the lambda builds"
-  type        = string
-  default = null
-}
-
-variable "lambda_handler" {
-  description = "Lambda handler"
-  type        = string
-  default = "dummy_function.handler"
-}
-
-
-variable "lambda_runtime" {
-  description = "Python runtime"
-  type        = string
-  default = "python3.8"
-}
-
 variable "cloudwatch_retention_days" {
   description = "Number of days that cloudwatch will retain logs"
   type        = number
@@ -40,18 +21,6 @@ variable "timeout" {
   default     = 12
 }
 
-variable "layers" {
-  type = list(string)
-  default = null
-}
-
-
-variable "lambda_function_payload_key" {
-  description = "Lambda function payload key"
-  type        = string
-  default     = "lambda_dummy_function_payload.zip"
-}
-
 variable "image_uri" {
   description = "Lambda function image uri"
   type        = string
@@ -61,12 +30,6 @@ variable "image_uri" {
 variable "environment_variables" {
   type = map(string)
   default = {dummy_var = "dummy_var"}
-}
-
-variable "package_type" {
-  type = string
-  default = "Zip"
-  
 }
 
 variable "role_policies" {
