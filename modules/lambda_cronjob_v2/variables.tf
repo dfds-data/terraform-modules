@@ -45,3 +45,10 @@ variable "rate_expression" {
   default = "rate(30 days)"
 }
 
+variable "webhook_url" {
+  type = string
+}
+
+variable "monitor_image_uri" {
+  type = string
+}

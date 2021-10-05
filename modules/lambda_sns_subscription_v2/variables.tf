@@ -58,3 +58,11 @@ variable "delay_seconds" {
   default = 10
   
 }
+
+variable "webhook_url" {
+  type = string
+}
+
+variable "monitor_image_uri" {
+  type = string
+}
