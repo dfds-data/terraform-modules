@@ -1,5 +1,5 @@
 variable "entity_name" {
-  description = "Name of the entity"
+  description = "Name of the data entity you will create a data pump for"
   type        = string
 }
 
@@ -11,7 +11,7 @@ variable "log_group" {
 variable "filterpattern" {
   description = "Filter pattern"
   type        = string
-  default     = "?ERROR ?WARNING ?(Task timed out)"
+  default     = "ERROR"
 }
 
 variable "builds_bucket" {
