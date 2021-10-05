@@ -83,7 +83,7 @@ resource "aws_sns_topic" "topic" {
 }
 
 module "monitor" {
-  source        = "github.com/dfds-data/terraform-modules/modules/lambda_log_subscription"
+  source        = "github.com/dfds-data/terraform-modules/modules/lambda_log_subscription_v2"
   entity_name   = format("mntr-%s", local.resource_name)
   log_group     = module.lambda_base.log_group_name
   image_uri = "469457075771.dkr.ecr.eu-central-1.amazonaws.com/send-message-to-teams:latest"
