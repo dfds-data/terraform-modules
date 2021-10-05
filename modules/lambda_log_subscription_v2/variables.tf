@@ -11,7 +11,7 @@ variable "log_group" {
 variable "filterpattern" {
   description = "Filter pattern"
   type        = string
-  default     = "? ERROR ? WARNING ? Task timed out"
+  default     = "?ERROR ?WARNING  ?\"Task timed out\""
 }
 
 variable "role_policies" {
