@@ -1,106 +1,24 @@
-resource "random_string" "random" {
-  length  = 5
-  special = false
-  lower   = true
-  upper   = false
-}
-
-locals {
-  resource_name = format("%s-%s", var.entity_name, random_string.random.result)
-}
-
-resource "aws_lambda_function" "lambda_function" {
-  s3_bucket     = var.builds_bucket
-  s3_key        = var.lambda_function_payload_key
-  image_uri     = var.image_uri
-  function_name = local.resource_name
-  role          = aws_iam_role.instance.arn
-  handler       = var.lambda_handler
-  runtime       = var.lambda_runtime
+module "lambda_base" {
+  source        = "github.com/dfds-data/terraform-modules/modules/lambda_base"
+  entity_name   = var.entity_name
+  image_uri = var.image_uri
+  environment_variables = var.environment_variables
   timeout     = var.timeout
   memory_size = var.memory_size
-  layers = var.layers
-  package_type = var.package_type
-  environment {
-    variables = var.environment_variables
-  }
-  lifecycle {
-    ignore_changes = [
-      s3_key,
-      s3_bucket,
-      last_modified,
-      qualified_arn,
-      version,
-      handler,
-      environment,
-      layers,
-      timeout,
-      memory_size
-    ]
-  }
-}
-
-resource "aws_iam_role" "instance" {
-  name               = local.resource_name
-  assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
-  lifecycle {
-    ignore_changes = [
-      assume_role_policy
-    ]
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "role-policy-attachment" {
-  for_each   = toset(var.role_policies)
-  role       = aws_iam_role.instance.name
-  policy_arn = each.value
-  lifecycle {
-    ignore_changes = [
-      policy_arn
-    ]
-  }
-}
-
-resource "aws_sns_topic" "topic" {
-  name = local.resource_name
-}
-
-module "monitor" {
-  source        = "github.com/dfds-data/terraform-modules/modules/lambda_log_subscription"
-  entity_name   = format("mntr-%s", local.resource_name)
-  log_group     = aws_cloudwatch_log_group.log_lambda.name
-  image_uri = "469457075771.dkr.ecr.eu-central-1.amazonaws.com/send-message-to-teams:latest"
-  package_type = "Image"
-  lambda_runtime = null
-  lambda_handler = null
-  lambda_function_payload_key = null
-
-  environment_variables = {
-      webhook_url = "https://dfds.webhook.office.com/webhookb2/099086f9-7359-4d9c-a0f1-d6e48882f42a@73a99466-ad05-4221-9f90-e7142aa2f6c1/IncomingWebhook/bd7eb83cd19440b8b2928ccaecb9d5f2/d7bb3513-a242-4d53-9959-807f4ececf3a"
-    }
-}
-
-resource "aws_cloudwatch_log_group" "log_lambda" {
-  name              = "/aws/lambda/${local.resource_name}"
-  retention_in_days = var.cloudwatch_retention_days
+  role_policies = var.role_policies
+  cloudwatch_retention_days = var.cloudwatch_retention_days
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda_function" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
-  function_name = local.resource_name
+  function_name = module.lambda_base.resource_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.rate.arn
 }
 
-resource "aws_s3_bucket_object" "function" {
-  bucket = var.builds_bucket
-  key    = "lambda_dummy_function_payload.zip"
-  source = data.archive_file.function.output_path
-}
-
 resource "aws_cloudwatch_event_rule" "rate" {
-  name                = local.resource_name
+  name                = module.lambda_base.resource_name
   schedule_expression = var.rate_expression
   lifecycle {
     ignore_changes = [
@@ -111,8 +29,22 @@ resource "aws_cloudwatch_event_rule" "rate" {
 
 resource "aws_cloudwatch_event_target" "target" {
   rule      = aws_cloudwatch_event_rule.rate.name
-  target_id = local.resource_name
-  arn       = aws_lambda_function.lambda_function.arn
+  target_id = module.lambda_base.resource_name
+  arn       = module.lambda_base.lambda_function_arn
 }
 
+resource "aws_sns_topic" "topic" {
+  name = module.lambda_base.resource_name
+}
 
+module "monitor" {
+  source        = "github.com/dfds-data/terraform-modules/modules/lambda_log_subscription"
+  entity_name   = format("mntr-%s", var.entity_name)
+  log_group     = module.lambda_base.log_group_name
+  image_uri = var.monitor_image_uri
+
+
+  environment_variables = {
+      webhook_url = var.webhook_url
+    }
+}
