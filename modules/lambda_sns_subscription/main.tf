@@ -68,7 +68,7 @@ EOF
 }
 
 resource "aws_sns_topic" "topic" {
-  name = var.entity_name
+  name = module.lambda_base.resource_name
 }
 
 module "monitor" {
