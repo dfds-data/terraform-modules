@@ -29,7 +29,7 @@ pattern in inspired by
 ### Create Terraform bucket
 
 1. `aws s3api create-bucket --bucket <bucket_name> --region <region> --create-bucket-configuration LocationConstraint=<region>`
-2. Enter terraform bucket name into [backend.tf](terraform/backend.tf)
+2. Enter terraform bucket name into [backend.tf](example/backend.tf)
 
 ### Push image to AWS ECR repository
 
@@ -131,3 +131,27 @@ def publish_to_sns(message):
 ```
 
 where `message` is a python dictionary.
+
+
+## Example
+
+Spin up the infrastructure for a two step cronjob -> sns_subscription pipeline.
+### Spin up infrastructure
+
+0. Start Docker
+1. [Log in to capability.](#log-in-to-capability).
+2. Note the account id (the 12 digit number next to the capability name)
+3. [Create Terraform bucket.](#create-terraform-bucket)
+4. `cd modules/examples/monitor`
+5. `aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin <account_id>.dkr.ecr.eu-central-1.amazonaws.com`
+6. `aws ecr create-repository --repository-name monitor_lambda`
+7. `docker build -t monitor_lambda .`
+8.  `docker tag monitor_lambda:latest <account_id>.dkr.ecr.eu-central-1.amazonaws.com/monitor_lambda:latest`
+9.  `docker push <account_id>.dkr.ecr.eu-central-1.amazonaws.com/monitor_lambda:latest`
+10. Return to the root of the repository: `cd ../../..`
+11. `cd example`
+12. Enter the webhook_url and monitor image uri in the [terraform.tfvars](example/terraform.tfvars) file
+13. terraform init
+14. terraform apply
+
+### Push code to lambda functions
