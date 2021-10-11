@@ -34,17 +34,11 @@ new image or other configuration updates will not revert these updates.
 ## Specify the infrastructure
 1. In the terraform folder, define the infrastructure with the two source modules [cronjob](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_cronjob) and [sns_subscription](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_sns_subscription).
 
-
+### Cronjob
+See you to specify a lambda cronjob resource [here](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_cronjob)
 ### SNS subscription
-``` terraform
-module <entity_name> {
-  source        = "github.com/dfds-data/terraform-modules/modules/lambda_sns_subscription"
-  entity_name   = <entity_name>
-  image_uri = <image_uri> # This image can be anything for now. It will be ignored in subsequent runs of terraform apply. The image should updated in the CI/CD pipeline.
-  monitor_image_uri = <monitor_image_uri> # This image must contain a function that reads an event and posts the message to a webhook url. Per default it listens to the 'ERROR' and 'timeout' words in the logs of the cronjob. This can be changed by specifying the 'filterpattern' argument.
-  webhook_url = var.webhook_url
-  sns_topic_arn = module.<entitiy_name>.topic_arn
-}
+See you to specify a lambda SNS subcription resource [here](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_sns_subscription)
+
 ```
 ## Have Terraform provision infrastructure
 1. Write the webhook_url and monitor_image_uri in the terraform.tfvars file. 
