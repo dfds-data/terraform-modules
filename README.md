@@ -56,7 +56,7 @@ CMD ["preprocess.lambda_handler"]
 ```
 
 2. [Create ECR repository for the function and push the image.](#push-image-to-aws-ecr-repository) 
-3. You aws-cli to update the function and other configuration associated to the function
+3. Use AWS CLI commands to update the function and other configuration associated to the function
 ```
 aws lambda update-function-configuration --function-name <function_name> \
     --environment "Variables={<env_name_1>=<env_name_1_val>, <env_name_2>=<env_name_2_val>}" \
