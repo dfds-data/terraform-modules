@@ -76,6 +76,7 @@ module "monitor" {
   entity_name   = format("mntr-%s", var.entity_name)
   log_group     = module.lambda_base.log_group_name
   image_uri = var.monitor_image_uri
+  filterpattern = var.filterpattern
 
 
   environment_variables = {

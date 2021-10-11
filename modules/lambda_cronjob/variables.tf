@@ -9,6 +9,12 @@ variable "cloudwatch_retention_days" {
   default = 14
 }
 
+variable "filterpattern" {
+  description = "Filter pattern"
+  type        = string
+  default     = "?ERROR ?\"Task timed out\""
+}
+
 variable "memory_size" {
   description = "Amount of memory in MB your Lambda Function can use at runtime"
   type        = number

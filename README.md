@@ -34,12 +34,6 @@ new image or other configuration updates will not revert these updates.
 ## Specify the infrastructure
 1. In the terraform folder, define the infrastructure with the two source modules [cronjob](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_cronjob) and [sns_subscription](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_sns_subscription).
 
-### Cronjob
-See you to specify a lambda cronjob resource [here](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_cronjob)
-### SNS subscription
-See you to specify a lambda SNS subcription resource [here](https://github.com/dfds-data/terraform-modules/tree/main/modules/lambda_sns_subscription)
-
-```
 ## Have Terraform provision infrastructure
 1. Write the webhook_url and monitor_image_uri in the terraform.tfvars file. 
 2. `terraform init`
@@ -55,15 +49,13 @@ You must have a file with a lambda handler function. You can also specify a requ
 ```docker
 FROM amazon/aws-lambda-python:3.8
 
-COPY requirements.txt ./
+COPY requirements.txt preprocess.py ./
 RUN python -m pip install -r requirements.txt -t .
-
-COPY preprocess.py .
 
 CMD ["preprocess.lambda_handler"]
 ```
 
-2. [Create ECR repository for the function](#push-image-to-aws-ecr-repository) and push the image.
+2. [Create ECR repository for the function and push the image.](#push-image-to-aws-ecr-repository) 
 3. You aws-cli to update the function and other configuration associated to the function
 ```
 aws lambda update-function-configuration --function-name <function_name> \
