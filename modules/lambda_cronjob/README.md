@@ -1,39 +1,15 @@
 # Introduction
 
-This module spins up the infrastructure for a cronjob on aws lambda. It uses a
-pattern that separates the infrastructure from the code. The build team controls
-the CI/CD pipeline for the code, the execution environment, environment
-variables. Running `terraform apply` after updating the code, layer or
-environment will not revert these updates
+This module spins up the infrastructure for a cronjob on aws lambda.
 
 # How to use
 
-You must set the `environmentname` and `entity_name` variables. Be careful not
-to set this to an existing pair of environmentname and entity_name, in that case
-terraform will replace the existing resources. Terraform will ask you before
-replacing those resources.
-
-You will need to have created a builds bucket. You can create it with the base_infrastructure module, or create it manually.
-
-```
-module "cronjob" {
-  source                  = "github.com/dfds-data/terraform-modules/modules/lambda_cronjob"
-  environmentname         = "dev"
-  entity_name             = "metrics"
-  role_policies           = ["arn:aws:iam::aws:policy/AmazonS3FullAccess", "arn:aws:iam::aws:policy/AmazonAthenaFullAccess", "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"]
-  builds_bucket           = module.base_infrastructure.builds_bucket
+``` hcl
+module <entity_name> {
+  source        = "github.com/dfds-data/terraform-modules/modules/lambda_cronjob"
+  entity_name   = <entity_name>
+  image_uri = <image_uri> # This image can be anything for now. It will be ignored in subsequent runs of terraform apply. The image should updated in the CI/CD pipeline.
+  monitor_image_uri = <monitor_image_uri> # This image must contain a function that reads an event and posts the message to a webhook url. Per default it listens to the 'ERROR' and 'timeout' words in the logs of the cronjob. This can be changed by specifying the 'filterpattern' argument.
+  webhook_url = var.webhook_url
 }
-
 ```
-
-The module will generate a dummy lambda layer and a dummy lambda function. You can change these with the aws cli.
-
-aws lambda publish-layer-version
-
-aws lambda update-function-code
-
-aws lambda update-function-configuration
-
-# Variables
-
-There is a list of all variables and a description of these in the [variables.tf ](./variables.tf) file
