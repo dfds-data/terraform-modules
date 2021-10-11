@@ -1,10 +1,15 @@
 # Introduction
 
-Easy to set-up and flexible event-based data science pipelines. It uses a
-pattern that separates the infrastructure from the code. The build team controls
-the CI/CD pipeline for the code, the execution environment, environment
-variables. Running `terraform apply` after updating the lambda function to use a
-new image or other configuration updates will not revert these updates.
+Easy to set-up and flexible event-based data science pipelines.
+
+We want to urge you to separate the infrastructure from the code. Use this only
+to spin up and spin down infrastructure. The terraform modules will ignore most
+changes you make to the infrastructure, including the code. You should use a
+CI/CD pipeline for the code, the execution environment, environment variables.
+If you run `terraform apply` after updating the lambda function to use a new
+image or other configuration updates, changes will mostly be ignored. This
+pattern in inspired by
+[this article](https://www.johnroach.io/deploying-lambda-functions-with-terraform-just-dont/).
 
 ## Getting Started
 
